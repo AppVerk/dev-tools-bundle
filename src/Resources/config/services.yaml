@@ -11,3 +11,6 @@ services:
     DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    DevTools\Repository\Utils\TokenGeneratorInterface:
+        class: DevTools\Repository\Utils\TokenGenerator
