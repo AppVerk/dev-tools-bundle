@@ -31,7 +31,8 @@
         "symfony/yaml": "^4.4 || ^5.2",
         "symfony/validator": "^4.4 || ^5.2",
         "symfony/security-core": "^4.4 || ^5.2",
-        "knplabs/knp-paginator-bundle": "^5.0"
+        "knplabs/knp-paginator-bundle": "^5.0",
+        "timostamm/doctrine-fixed-timezone": "^1.1"
     },
     "suggest": {
         "sentry/sentry-symfony": "To handle application monitoring"
