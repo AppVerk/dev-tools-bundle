@@ -18,25 +18,27 @@
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/doctrine-migrations-bundle": "^3.0",
-        "symfony/framework-bundle": "^4.4 | ^5.2",
-        "symfony/messenger": "^4.4 | ^5.2",
-        "symfony/serializer": "^4.4 | ^5.2",
+        "symfony/framework-bundle": "^4.4 || ^5.2",
+        "symfony/messenger": "^4.4 || ^5.2",
+        "symfony/serializer": "^4.4 || ^5.2",
         "doctrine/annotations": "^1.0",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "symfony/property-access": "^4.4 | ^5.2",
-        "symfony/property-info": "^4.4 | ^5.2",
+        "symfony/property-access": "^4.4 || ^5.2",
+        "symfony/property-info": "^4.4 || ^5.2",
         "symfony/monolog-bundle": "^3.6",
-        "symfony/proxy-manager-bridge": "^4.4 | ^5.2",
-        "symfony/yaml": "^4.4 | ^5.2",
-        "symfony/validator": "^4.4 | ^5.2",
-        "symfony/security-core": "^4.4 | ^5.2",
+        "symfony/proxy-manager-bridge": "^4.4 || ^5.2",
+        "symfony/yaml": "^4.4 || ^5.2",
+        "symfony/validator": "^4.4 || ^5.2",
+        "symfony/security-core": "^4.4 || ^5.2",
         "knplabs/knp-paginator-bundle": "^3.0"
     },
     "suggest": {
         "sentry/sentry-symfony": "To handle application monitoring"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.1",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "symfony/phpunit-bridge": "^4.4 || ^5.2",
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "phpstan/phpstan-phpunit": "^0.12",
+        "phpstan/phpstan-symfony": "^0.12"
     }
 }
