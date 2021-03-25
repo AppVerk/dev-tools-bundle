@@ -1,0 +1,12 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+#    symfony:
+#        container_xml_path: var/cache/test/srcApp_KernelTestDebugContainer.xml
+
+#    ignoreErrors:
+#        - '#Call to an undefined method.*ResultStatement::fetchAllAssociative\(\)#'
