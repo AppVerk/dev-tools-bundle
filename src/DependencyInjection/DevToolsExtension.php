@@ -5,9 +5,14 @@ declare(strict_types = 1);
 namespace DevTools\DependencyInjection;
 
 use DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber;
+use DevTools\Messenger\CommandBus;
+use DevTools\Messenger\EventBus;
+use DevTools\Messenger\QueryBus;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class DevToolsExtension extends Extension
@@ -21,12 +26,37 @@ class DevToolsExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $this->configureDoctrine($config, $container);
+        $this->configureBusses($config, $container);
     }
 
     private function configureDoctrine(array $config, ContainerBuilder $container): void
     {
         if (!$config['doctrine_extensions']) {
             $container->removeDefinition(DBALSchemaEventSubscriber::class);
+        }
+    }
+
+    private function configureBusses(array $config, ContainerBuilder $container): void
+    {
+        if ($config['event_bus']['enabled']) {
+            $container->setDefinition(
+                EventBus::class,
+                new Definition(EventBus::class, [new Reference($config['event_bus']['name'])])
+            );
+        }
+
+        if ($config['command_bus']['enabled']) {
+            $container->setDefinition(
+                CommandBus::class,
+                new Definition(CommandBus::class, [new Reference($config['command_bus']['name'])])
+            );
+        }
+
+        if ($config['query_bus']['enabled']) {
+            $container->setDefinition(
+                QueryBus::class,
+                new Definition(QueryBus::class, [new Reference($config['query_bus']['name'])])
+            );
         }
     }
 }
