@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    DevTools\Repository\Paginator:
+        arguments: ['@knp_paginator']
+
+    DevTools\Validator\SortFieldsValidator: ~
+
+    DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
