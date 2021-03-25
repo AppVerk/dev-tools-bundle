@@ -1,0 +1,6 @@
+api_jwt_login:
+    path: /api/security/jwt
+
+api_jwt_refresh:
+    path: /api/security/jwt/refresh
+    controller: gesdinet.jwtrefreshtoken::refresh
