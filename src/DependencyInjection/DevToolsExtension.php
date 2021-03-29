@@ -8,6 +8,7 @@ use DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber;
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\EventBus;
 use DevTools\Messenger\QueryBus;
+use MyCLabs\Enum\Enum;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -31,8 +32,27 @@ class DevToolsExtension extends Extension
 
     private function configureDoctrine(array $config, ContainerBuilder $container): void
     {
-        if (!$config['doctrine_extensions']) {
+        if (!$config['doctrine']['location_types']) {
             $container->removeDefinition(DBALSchemaEventSubscriber::class);
+        }
+
+        if (!empty($config['doctrine']['enum_types'])) {
+            if (!class_exists('Acelaya\Doctrine\Type\PhpEnumType')) {
+                throw new \LogicException(
+                    'Unable to process enum types because package "acelaya/doctrine-enum-type" is missing.'
+                );
+            }
+
+            foreach ($config['doctrine']['enum_types'] as $item) {
+                if (!is_subclass_of($item['class'], Enum::class)) {
+                    throw new \InvalidArgumentException(sprintf(
+                        'Class "%s" should be instance of "MyCLabs\Enum\Enum".',
+                        $item['class']
+                    ));
+                }
+            }
+
+            $container->setParameter('dev_tools.doctrine.enum_types.config', $config['doctrine']['enum_types']);
         }
     }
 

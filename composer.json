@@ -35,7 +35,8 @@
         "timostamm/doctrine-fixed-timezone": "^1.1"
     },
     "suggest": {
-        "sentry/sentry-symfony": "To handle application monitoring"
+        "sentry/sentry-symfony": "To handle application monitoring",
+        "acelaya/doctrine-enum-type": "Enums implementation"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.4 || ^5.2",

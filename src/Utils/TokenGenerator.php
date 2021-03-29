@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\Repository\Utils;
+namespace DevTools\Utils;
 
 class TokenGenerator implements TokenGeneratorInterface
 {
