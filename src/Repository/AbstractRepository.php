@@ -4,17 +4,30 @@ declare(strict_types = 1);
 
 namespace DevTools\Repository;
 
+use DevTools\Domain\AbstractAggregateRoot;
+use DevTools\Messenger\EventBus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 abstract class AbstractRepository extends ServiceEntityRepository
 {
+    private ?EventBus $eventBus;
+
+    public function __construct(EventBus $eventBus = null)
+    {
+        $this->eventBus = $eventBus;
+    }
+
     public function save(object ...$entities): void
     {
-        foreach ($entities as $entity) {
-            $this->_em->persist($entity);
-        }
+        $this->_em->transactional(function () use ($entities) {
+            foreach ($entities as $entity) {
+                $this->_em->persist($entity);
+            }
 
-        $this->_em->flush();
+            $this->_em->flush();
+
+            $this->publishEvents($entities);
+        });
     }
 
     public function remove(object ...$entities): void
@@ -24,5 +37,24 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         $this->_em->flush();
+    }
+
+    protected function publishEvents(array $entities): void
+    {
+        if (null === $this->eventBus) {
+            return;
+        }
+
+        foreach ($entities as $entity) {
+            if (!$entity instanceof AbstractAggregateRoot) {
+                continue;
+            }
+
+            $events = $entity->popRecordedEvents();
+
+            foreach ($events as $event) {
+                $this->eventBus->dispatch($event);
+            }
+        }
     }
 }

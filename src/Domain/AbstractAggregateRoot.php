@@ -31,7 +31,7 @@ abstract class AbstractAggregateRoot
     /**
      * @return AbstractAggregateRootEvent[]
      */
-    protected function popRecordedEvents(): array
+    public function popRecordedEvents(): array
     {
         $pendingEvents = $this->recordedEvents;
 
