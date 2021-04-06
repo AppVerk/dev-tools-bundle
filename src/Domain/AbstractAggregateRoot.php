@@ -4,10 +4,16 @@ declare(strict_types = 1);
 
 namespace DevTools\Domain;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\MappedSuperclass
+ */
 abstract class AbstractAggregateRoot
 {
-    protected string $aggregateId;
-
+    /**
+     * @ORM\Column(type="integer")
+     */
     protected int $version = 0;
 
     /**
@@ -42,8 +48,6 @@ abstract class AbstractAggregateRoot
 
         $this->apply($event);
     }
-
-    abstract protected function aggregateId(): string;
 
     protected function apply(AbstractAggregateRootEvent $event): void
     {

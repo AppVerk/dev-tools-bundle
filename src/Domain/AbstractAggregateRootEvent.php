@@ -6,15 +6,12 @@ namespace DevTools\Domain;
 
 abstract class AbstractAggregateRootEvent
 {
-    protected string $aggregateId;
-
     protected \DateTimeImmutable $createdAt;
 
     protected int $version;
 
-    public function __construct(string $aggregateId, \DateTimeImmutable $createdAt = null, int $version = null)
+    public function __construct(\DateTimeImmutable $createdAt = null, int $version = null)
     {
-        $this->aggregateId = $aggregateId;
         $this->createdAt = $createdAt ?? DateTimeProvider::current();
         $this->version = $version ?? 0;
     }
@@ -26,11 +23,6 @@ abstract class AbstractAggregateRootEvent
         $self->version = $version;
 
         return $self;
-    }
-
-    public function getAggregateId(): string
-    {
-        return $this->aggregateId;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
