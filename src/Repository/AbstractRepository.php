@@ -19,7 +19,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
     public function save(object ...$entities): void
     {
-        $this->_em->transactional(function () use ($entities) {
+        $this->_em->transactional(function () use ($entities): void {
             foreach ($entities as $entity) {
                 $this->_em->persist($entity);
             }

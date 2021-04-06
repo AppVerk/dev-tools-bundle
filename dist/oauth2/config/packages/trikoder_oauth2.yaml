@@ -1,0 +1,26 @@
+trikoder_oauth2:
+    authorization_server:
+        private_key: /app/config/oauth/private.key
+        private_key_passphrase: null
+        encryption_key: '%env(string:OAUTH2_ENCRYPTION_KEY)%'
+        grant_types:
+            authorization_code:
+                enable: false
+            implicit:
+                enable: false
+            client_credentials:
+                enable: true
+            password:
+                enable: true
+            refresh_token:
+                enable: true
+
+    resource_server:
+        public_key: /app/config/oauth/public.key
+
+    persistence:
+        doctrine: null
+
+    role_prefix: ROLE_
+
+    scopes: ['application', 'administration']

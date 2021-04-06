@@ -33,3 +33,9 @@
 2. ```composer require --dev timeweb/phpstan-enum```
 
 3. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/enums with project root directory
+
+### OAuth2
+
+1. ```composer require security cors trikoder/oauth2-bundle nyholm/psr7```
+
+2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/oauth2 with project root directory
