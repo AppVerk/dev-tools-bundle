@@ -2,4 +2,4 @@ dev_tools:
     doctrine:
         enum_types:
             -   name: user_status
-                class: App\Module\Security\Domain\UserStatus
+                class: App\Security\Domain\Model\UserStatus

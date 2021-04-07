@@ -7,13 +7,16 @@ namespace DevTools\Repository;
 use DevTools\Domain\AbstractAggregateRoot;
 use DevTools\Messenger\EventBus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 abstract class AbstractRepository extends ServiceEntityRepository
 {
     private ?EventBus $eventBus;
 
-    public function __construct(EventBus $eventBus = null)
+    public function __construct(ManagerRegistry $registry, string $entityClass, EventBus $eventBus = null)
     {
+        parent::__construct($registry, $entityClass);
+
         $this->eventBus = $eventBus;
     }
 
