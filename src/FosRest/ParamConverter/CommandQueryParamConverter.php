@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace DevTools\FosRest\ParamConverter;
 
+use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class CommandQueryParamConverter implements ParamConverterInterface
     private $token;
 
     /**
-     * @var Serializer
+     * @var SymfonySerializerAdapter
      */
     private $serializer;
 
@@ -125,7 +125,7 @@ class CommandQueryParamConverter implements ParamConverterInterface
             } elseif ('serializeNull' === $key) {
                 $context->setSerializeNull($options['serializeNull']);
             } else {
-                $context->setAttribute($key, $value);
+                $context->setAttribute((string) $key, $value);
             }
         }
     }
@@ -164,13 +164,20 @@ class CommandQueryParamConverter implements ParamConverterInterface
             if ($property->getName() === $loggedField) {
                 $user = $this->token->getToken()->getUser();
 
-                if (method_exists($user, 'getId')) {
-                    $property->setValue($object, $this->normalizeValue($user->getId(), $property->getType()));
+                if (!method_exists($user, 'getId')) {
+                    continue;
                 }
+
+                $property->setValue($object, $this->normalizeValue($user->getId(), $property->getType()));
             }
         }
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     private function normalizeValue($value, ?\ReflectionType $type)
     {
         if (null === $type) {

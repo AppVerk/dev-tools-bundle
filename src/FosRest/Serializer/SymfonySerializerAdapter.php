@@ -40,8 +40,10 @@ class SymfonySerializerAdapter
      * @param mixed $data
      *
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     *
+     * @return mixed
      */
-    public function normalize($data, string $format, Context $context): string
+    public function normalize($data, string $format, Context $context)
     {
         $newContext = $this->convertContext($context);
 

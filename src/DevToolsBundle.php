@@ -25,7 +25,7 @@ class DevToolsBundle extends Bundle
         parent::boot();
 
         if ($this->container->hasParameter('dev_tools.doctrine.enum_types.config')) {
-            foreach ($this->container->getParameter('dev_tools.doctrine.enum_types.config') as $item) {
+            foreach ((array) $this->container->getParameter('dev_tools.doctrine.enum_types.config') as $item) {
                 if (PhpEnumType::hasType($item['name'])) {
                     continue;
                 }

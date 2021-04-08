@@ -24,7 +24,10 @@ class PsrStreamResponse extends Response
         $this->bufferSize = $bufferSize;
     }
 
-    public function sendContent(): void
+    /**
+     * @return $this
+     */
+    public function sendContent()
     {
         $chunked = $this->headers->has('Transfer-Encoding');
         $this->streamContent->seek(0);
@@ -45,9 +48,11 @@ class PsrStreamResponse extends Response
             flush();
 
             if (!$chunk) {
-                return;
+                return $this;
             }
         }
+
+        return $this;
     }
 
     public function getContent()

@@ -16,10 +16,13 @@ class SortFields extends Composite
 {
     public const NO_SUCH_FIELD_ERROR = '7bb484df-0d25-4443-8a9b-36f7aabaf4de';
 
-    public $fields = [];
+    public array $fields = [];
 
-    public $extraFieldsMessage = 'This field was not expected.';
+    public string $extraFieldsMessage = 'This field was not expected.';
 
+    /**
+     * @var string[]
+     */
     protected static $errorNames = [
         self::NO_SUCH_FIELD_ERROR => 'NO_SUCH_FIELD_ERROR',
     ];
@@ -64,10 +67,8 @@ class SortFields extends Composite
 
     /**
      * @param mixed $options
-     *
-     * @return mixed
      */
-    private function normalizeOptions($options)
+    protected function normalizeOptions($options): array
     {
         if (is_array($options['value'] ?? null)) {
             return ['fields' => $options['value']];

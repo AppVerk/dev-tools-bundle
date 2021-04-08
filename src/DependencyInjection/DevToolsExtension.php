@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace DevTools\DependencyInjection;
 
 use DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber;
+use DevTools\FosRest\ParamConverter\CommandQueryParamConverter;
+use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\EventBus;
 use DevTools\Messenger\QueryBus;

@@ -39,9 +39,7 @@ class Paginator
         $filerParameter = null === $rootEntityFilter ? null : $queryBuilder->getParameter($rootEntityFilter);
 
         if (null !== $filerParameter && count((array) $filerParameter->getValue()) === $itemsPerPage) {
-            $items = $queryBuilder->getQuery()->getResult();
-
-            return new PaginatedResult($items, count($items), 1, 1, $itemsPerPage);
+            return $this->buildSinglePageResult($queryBuilder, $itemsPerPage);
         }
 
         /** @var BundleSlidingPagination $pagination */
@@ -54,15 +52,7 @@ class Paginator
 
         $this->assertPagination($pagination);
 
-        $data = $pagination->getPaginationData();
-
-        return new PaginatedResult(
-            $pagination->getItems(),
-            (int) $pagination->getTotalItemCount(),
-            $data['current'],
-            $data['pageCount'],
-            $itemsPerPage
-        );
+        return $this->buildMultyPageResult($pagination, $itemsPerPage);
     }
 
     private function buildPaginatedResultFromNativeQuery(NativeQuery $query, int $page, int $itemsPerPage): PaginatedResult
@@ -106,5 +96,39 @@ class Paginator
         }
 
         throw new \RuntimeException('Unsupported pagination instance provided.');
+    }
+
+    private function buildMultyPageResult(BundleSlidingPagination $pagination, int $itemsPerPage): PaginatedResult
+    {
+        $data = $pagination->getPaginationData();
+        $items = [];
+
+        foreach ($pagination->getItems() as $item) {
+            $items[] = $item;
+        }
+
+        return new PaginatedResult(
+            $items,
+            (int) $pagination->getTotalItemCount(),
+            $data['current'],
+            $data['pageCount'],
+            $itemsPerPage
+        );
+    }
+
+    /**
+     * @param DBALQueryBuilder|QueryBuilder $queryBuilder
+     */
+    private function buildSinglePageResult($queryBuilder, int $itemsPerPage): PaginatedResult
+    {
+        $items = [];
+
+        if ($queryBuilder instanceof DBALQueryBuilder) {
+            $items = $queryBuilder->execute()->fetchAllAssociative();
+        } elseif ($queryBuilder instanceof QueryBuilder) {
+            $items = $queryBuilder->getQuery()->getResult();
+        }
+
+        return new PaginatedResult($items, count($items), 1, 1, $itemsPerPage);
     }
 }
