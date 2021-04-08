@@ -22,10 +22,10 @@ class Resolver
     private NameConverterInterface $nameConverter;
 
     public function __construct(
+        NameConverterInterface $nameConverter,
         RequestStack $requestStack,
         Parser $parser,
-        RetrieverLocator $retrieverLocator,
-        NameConverterInterface $nameConverter
+        RetrieverLocator $retrieverLocator
     ) {
         $this->parser = $parser;
         $this->requestStack = $requestStack;

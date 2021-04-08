@@ -23,8 +23,10 @@ services:
             - { name: 'request.param_converter', converter: 'command_query', priority: 102 }
 
     DevTools\FosRest\Serializer\FlattenExceptionNormalizer:
-        decorates: 'fos_rest.serializer.flatten_exception_handler'
-        arguments: [ '@DevTools\FosRest\Serializer\FlattenExceptionNormalizer.inner' ]
+        decorates: 'fos_rest.serializer.flatten_exception_normalizer'
+        arguments:
+            - '@DevTools\FosRest\Serializer\FlattenExceptionNormalizer.inner'
+            - '@serializer.name_converter.metadata_aware'
 
     DevTools\FosRest\ErrorHandler\ErrorRenderer:
         decorates: 'error_renderer'
@@ -32,4 +34,5 @@ services:
 
     DevTools\Response\Includes\RetrieverLocator: ~
     DevTools\Response\Includes\Parser: ~
-    DevTools\Response\Includes\Resolver: ~
+    DevTools\Response\Includes\Resolver:
+        arguments: ['@serializer.name_converter.metadata_aware']
