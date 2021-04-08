@@ -42,10 +42,12 @@ abstract class AbstractDualGeometry extends FunctionNode
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
+        // @phpstan-ignore-next-line
         $this->firstGeomExpression = $parser->ArithmeticPrimary();
 
         $parser->match(Lexer::T_COMMA);
 
+        // @phpstan-ignore-next-line
         $this->secondGeomExpression = $parser->ArithmeticPrimary();
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);

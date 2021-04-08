@@ -29,3 +29,7 @@ services:
     DevTools\FosRest\ErrorHandler\ErrorRenderer:
         decorates: 'error_renderer'
         arguments: [ '@DevTools\FosRest\ErrorHandler\ErrorRenderer.inner' ]
+
+    DevTools\Response\Includes\RetrieverLocator: ~
+    DevTools\Response\Includes\Parser: ~
+    DevTools\Response\Includes\Resolver: ~

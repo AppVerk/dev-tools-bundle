@@ -1,0 +1,7 @@
+dev_tools:
+    doctrine:
+        enum_types:
+            -   name: user_status
+                class: App\Security\Domain\Model\UserStatus
+    api:
+        fos_rest: true

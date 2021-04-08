@@ -4,19 +4,21 @@
 2. ```composer require --dev friendsofphp/php-cs-fixer phpstan/phpstan-symfony phpstan/phpstan-phpunit symfony/test-pack symfony/profiler-pack```
 
 3. Add scripts to composer.json
-```
-    "setup": [
-        "bin/console doctrine:database:create --if-not-exists",
-        "bin/console doctrine:schema:create",
-        "bin/console messenger:setup-transports"
-    ],
-    "test": "bin/phpunit -d memory_limit=2G",
-    "analyse": [
-        "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=estimating --dry-run",
-        "phpstan analyse src tests -l 7"
-    ],
-    "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=estimating"
-```
+    ```json
+    {
+        "setup": [
+            "bin/console doctrine:database:create --if-not-exists",
+            "bin/console doctrine:schema:create",
+            "bin/console messenger:setup-transports"
+        ],
+        "test": "bin/phpunit -d memory_limit=2G",
+        "analyse": [
+            "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=estimating --dry-run",
+            "phpstan analyse src tests -l 7"
+        ],
+        "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=estimating"
+    }
+    ```
 
 4. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/base with project root directory
 
@@ -39,3 +41,17 @@
 1. ```composer require security cors trikoder/oauth2-bundle nyholm/psr7```
 
 2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/oauth2 with project root directory
+
+### FosRest
+
+1. ```composer require friendsofsymfony/rest-bundle```
+
+2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/fos-rest with project root directory
+
+3. Enable FosRest integration in DevTools bundle
+    ```yaml
+    dev_tools:
+        api:
+            fos_rest: true
+    ```
+   
