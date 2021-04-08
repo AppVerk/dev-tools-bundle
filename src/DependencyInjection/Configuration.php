@@ -78,6 +78,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('api')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('fos_rest')
+                            ->defaultValue(true)
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

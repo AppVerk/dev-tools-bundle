@@ -36,7 +36,8 @@
     },
     "suggest": {
         "sentry/sentry-symfony": "To handle application monitoring",
-        "acelaya/doctrine-enum-type": "Enums implementation"
+        "acelaya/doctrine-enum-type": "Enums implementation",
+        "friendsofsymfony/rest-bundle": "Rest api implementation"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.4 || ^5.2",

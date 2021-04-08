@@ -28,6 +28,7 @@ class DevToolsExtension extends Extension
 
         $this->configureDoctrine($config, $container);
         $this->configureBusses($config, $container);
+        $this->configureApi($config, $container);
     }
 
     private function configureDoctrine(array $config, ContainerBuilder $container): void
@@ -77,6 +78,14 @@ class DevToolsExtension extends Extension
                 QueryBus::class,
                 new Definition(QueryBus::class, [new Reference($config['query_bus']['name'])])
             );
+        }
+    }
+
+    private function configureApi(array $config, ContainerBuilder $container): void
+    {
+        if (!$config['api']['fos_rest']) {
+            $container->removeDefinition(CommandQueryParamConverter::class);
+            $container->removeDefinition(SymfonySerializerAdapter::class);
         }
     }
 }

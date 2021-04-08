@@ -14,3 +14,10 @@ services:
 
     DevTools\Repository\Utils\TokenGeneratorInterface:
         class: DevTools\Repository\Utils\TokenGenerator
+
+    DevTools\FosRest\Serializer\SymfonySerializerAdapter:
+        arguments: ['@serializer']
+
+    DevTools\FosRest\ParamConverter\CommandQueryParamConverter:
+        tags:
+            - { name: 'request.param_converter', converter: 'command_query', priority: 102 }

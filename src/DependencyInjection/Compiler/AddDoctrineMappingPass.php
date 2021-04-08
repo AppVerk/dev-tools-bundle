@@ -18,7 +18,7 @@ class AddDoctrineMappingPass implements CompilerPassInterface
             return;
         }
 
-        $enumConfig = $container->getParameter('dev_tools.doctrine.enum_types.config');
+        $enumConfig = (array) $container->getParameter('dev_tools.doctrine.enum_types.config');
         $enumMapping = [];
 
         foreach ($enumConfig as $item) {
@@ -33,7 +33,7 @@ class AddDoctrineMappingPass implements CompilerPassInterface
             }
         }
 
-        foreach ($container->getParameter('doctrine.connections') as $connectionName) {
+        foreach ((array) $container->getParameter('doctrine.connections') as $connectionName) {
             if (!isset($enumMapping[$connectionName])) {
                 continue;
             }
