@@ -82,7 +82,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('fos_rest')
-                            ->defaultValue(true)
+                            ->defaultValue(false)
                         ->end()
                     ->end()
                 ->end()

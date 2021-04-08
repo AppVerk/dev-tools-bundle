@@ -12,8 +12,8 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
-    DevTools\Repository\Utils\TokenGeneratorInterface:
-        class: DevTools\Repository\Utils\TokenGenerator
+    DevTools\Utils\TokenGeneratorInterface:
+        class: DevTools\Utils\TokenGenerator
 
     DevTools\FosRest\Serializer\SymfonySerializerAdapter:
         arguments: ['@serializer']
@@ -21,3 +21,11 @@ services:
     DevTools\FosRest\ParamConverter\CommandQueryParamConverter:
         tags:
             - { name: 'request.param_converter', converter: 'command_query', priority: 102 }
+
+    DevTools\FosRest\Serializer\FlattenExceptionNormalizer:
+        decorates: 'fos_rest.serializer.flatten_exception_handler'
+        arguments: [ '@DevTools\FosRest\Serializer\FlattenExceptionNormalizer.inner' ]
+
+    DevTools\FosRest\ErrorHandler\ErrorRenderer:
+        decorates: 'error_renderer'
+        arguments: [ '@DevTools\FosRest\ErrorHandler\ErrorRenderer.inner' ]

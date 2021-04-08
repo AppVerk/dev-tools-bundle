@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace DevTools\DependencyInjection;
 
 use DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber;
+use DevTools\FosRest\ErrorHandler\ErrorRenderer;
 use DevTools\FosRest\ParamConverter\CommandQueryParamConverter;
+use DevTools\FosRest\Serializer\FlattenExceptionNormalizer;
 use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\EventBus;
@@ -88,6 +90,8 @@ class DevToolsExtension extends Extension
         if (!$config['api']['fos_rest']) {
             $container->removeDefinition(CommandQueryParamConverter::class);
             $container->removeDefinition(SymfonySerializerAdapter::class);
+            $container->removeDefinition(ErrorRenderer::class);
+            $container->removeDefinition(FlattenExceptionNormalizer::class);
         }
     }
 }
