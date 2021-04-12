@@ -6,11 +6,12 @@ namespace DevTools\FosRest\Serializer;
 
 use FOS\RestBundle\Serializer\Normalizer\FlattenExceptionNormalizer as DecoratedFlattenExceptionNormalizer;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
+use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-class FlattenExceptionNormalizer implements NormalizerInterface
+class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
 {
     /**
      * @var DecoratedFlattenExceptionNormalizer
@@ -56,9 +57,9 @@ class FlattenExceptionNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, string $format = null)
+    public function supportsNormalization($data, string $format = null, array $context = [])
     {
         return $this->decoratedNormalizer->supportsNormalization($data, $format)
-            && ($context[SymfonySerializerAdapter::FOS_CONTEXT] ?? false);
+            && empty($context[Serializer::MESSENGER_SERIALIZATION_CONTEXT]);
     }
 }
