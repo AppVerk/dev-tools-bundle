@@ -58,6 +58,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, string $format = null)
     {
-        return $this->decoratedNormalizer->supportsNormalization($data, $format);
+        return $this->decoratedNormalizer->supportsNormalization($data, $format)
+            && ($context[SymfonySerializerAdapter::FOS_CONTEXT] ?? false);
     }
 }

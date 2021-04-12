@@ -54,4 +54,9 @@
         api:
             fos_rest: true
     ```
-   
+
+### Notification (email, sms, etc.)
+
+1. ```composer require symfony/notifier symfony/mailer symfony/twig-pack twig/cssinliner-extra twig/inky-extra```
+
+2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/notification with project root directory

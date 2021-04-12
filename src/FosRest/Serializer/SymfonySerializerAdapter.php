@@ -9,6 +9,8 @@ use Symfony\Component\Serializer\Serializer;
 
 class SymfonySerializerAdapter
 {
+    public const FOS_CONTEXT = 'fos_bundle_serialization';
+
     private Serializer $serializer;
 
     public function __construct(Serializer $serializer)
@@ -73,6 +75,10 @@ class SymfonySerializerAdapter
 
         if (null !== $context->getGroups()) {
             $newContext['groups'] = $context->getGroups();
+        }
+
+        if (false === $context->hasAttribute(self::FOS_CONTEXT)) {
+            $newContext[self::FOS_CONTEXT] = true;
         }
 
         $newContext['version'] = $context->getVersion();
