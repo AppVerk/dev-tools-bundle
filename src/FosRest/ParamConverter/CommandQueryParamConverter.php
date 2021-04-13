@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SymfonySerializerException;
+use Symfony\Component\Uid\Uuid;
 
 class CommandQueryParamConverter implements ParamConverterInterface
 {
@@ -185,6 +186,14 @@ class CommandQueryParamConverter implements ParamConverterInterface
         }
 
         $typeName = $type->getName();
+
+        if (Uuid::class === $typeName) {
+            if (!Uuid::isValid((string) $value)) {
+                throw new BadRequestHttpException('Invalid uuid identifier provided');
+            }
+
+            return Uuid::fromString($value);
+        }
 
         if ('int' === $typeName) {
             return (int) $value;
