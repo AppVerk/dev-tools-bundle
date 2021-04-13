@@ -28,6 +28,11 @@ services:
             - '@DevTools\FosRest\Serializer\FlattenExceptionNormalizer.inner'
             - '@serializer.name_converter.metadata_aware'
 
+    DevTools\FosRest\EventListener\ResponseStatusCodeListener:
+        decorates: 'fos_rest.exception.response_status_code_listener'
+        arguments:
+            - '@DevTools\FosRest\EventListener\ResponseStatusCodeListener.inner'
+
     DevTools\FosRest\ErrorHandler\ErrorRenderer:
         decorates: 'error_renderer'
         arguments: [ '@DevTools\FosRest\ErrorHandler\ErrorRenderer.inner' ]

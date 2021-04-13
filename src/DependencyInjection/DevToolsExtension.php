@@ -6,6 +6,7 @@ namespace DevTools\DependencyInjection;
 
 use DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber;
 use DevTools\FosRest\ErrorHandler\ErrorRenderer;
+use DevTools\FosRest\EventListener\ResponseStatusCodeListener;
 use DevTools\FosRest\ParamConverter\CommandQueryParamConverter;
 use DevTools\FosRest\Serializer\FlattenExceptionNormalizer;
 use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
@@ -92,6 +93,7 @@ class DevToolsExtension extends Extension
             $container->removeDefinition(SymfonySerializerAdapter::class);
             $container->removeDefinition(ErrorRenderer::class);
             $container->removeDefinition(FlattenExceptionNormalizer::class);
+            $container->removeDefinition(ResponseStatusCodeListener::class);
         }
     }
 }

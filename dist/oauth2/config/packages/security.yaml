@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     encoders:
         App\Security\Domain\Model\User:
             algorithm: auto
@@ -36,6 +37,6 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/api/security/oauth/authorize, roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
