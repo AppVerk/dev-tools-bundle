@@ -9,3 +9,7 @@ services:
         arguments:
             - '@DevTools\Tests\Cases\TestCaseFixturesLocator.inner'
             - '%kernel.project_dir%/test/Functional/DataFixtures'
+
+    DevTools\Messenger\CommandBus:
+        class: DevTools\Tests\Mock\CommandBus
+        arguments: [ '@command_bus' ]
