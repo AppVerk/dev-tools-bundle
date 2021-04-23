@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DevTools\Tests\Cases;
+namespace DevTools\UnitTest\TestCase;
 
 use Hautelook\AliceBundle\FixtureLocatorInterface;
 use Hautelook\AliceBundle\Locator\EnvDirectoryLocator;

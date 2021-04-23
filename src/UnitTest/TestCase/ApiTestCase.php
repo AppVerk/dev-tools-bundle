@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\Tests\Cases;
+namespace DevTools\UnitTest\TestCase;
 
 use Coduo\PHPMatcher\PHPUnit\PHPMatcherAssertions;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
@@ -87,12 +87,14 @@ abstract class ApiTestCase extends WebTestCase
         static::ensureKernelTestCase();
         $kernel = parent::bootKernel($options);
         $fixtureLocator = static::$container->get(TestCaseFixturesLocator::class);
+        self::$purgeWithTruncate = false;
 
         try {
             $fixtureLocator->setFixturesDirectories(static::getFixturesDirectories());
             static::populateDatabase();
         } finally {
             $fixtureLocator->setFixturesDirectories([]);
+            self::$purgeWithTruncate = true;
         }
 
         return $kernel;

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\Tests\Mock;
+namespace DevTools\UnitTest\Mock;
 
 use DevTools\Messenger\CommandBus as BaseCommandBus;
 

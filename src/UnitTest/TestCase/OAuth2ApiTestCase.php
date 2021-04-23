@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\Tests\Cases;
+namespace DevTools\UnitTest\TestCase;
 
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
