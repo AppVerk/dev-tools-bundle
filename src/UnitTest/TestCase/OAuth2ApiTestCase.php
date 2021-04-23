@@ -36,33 +36,6 @@ abstract class OAuth2ApiTestCase extends ApiTestCase
         return $this->generateOAuthAccessToken(null, $clientId, $scopes);
     }
 
-    private function generateOAuthAccessToken(
-        string $userIdentifier = null,
-        string $clientId = null,
-        array $scopes = []
-    ): string {
-        /** @var ClientRepositoryInterface $clientRepository */
-        $clientRepository = self::$container->get(ClientRepositoryInterface::class);
-        /** @var AccessTokenRepositoryInterface $tokenRepository */
-        $tokenRepository = self::$container->get(AccessTokenRepositoryInterface::class);
-
-        $clientId = $clientId ?? self::DEFAULT_CLIENT_ID;
-        $privateKey = new CryptKey($this->getRootDir() . self::PRIVATE_KEY_PATH, null, false);
-
-        $this->initClient($clientId);
-
-        $client = $clientRepository->getClientEntity($clientId);
-
-        $accessToken = $tokenRepository->getNewToken($client, $scopes, $userIdentifier);
-        $accessToken->setExpiryDateTime((new \DateTimeImmutable())->add(new \DateInterval('PT1H')));
-        $accessToken->setPrivateKey($privateKey);
-        $accessToken->setIdentifier((string) Uuid::v4());
-
-        $tokenRepository->persistNewAccessToken($accessToken);
-
-        return (string) $accessToken;
-    }
-
     protected function makeRequest(string $method, string $url, array $data = [], array $headers = []): Response
     {
         $allHeaders = array_merge(self::DEFAULT_REQUEST_HEADERS, $headers);
@@ -98,7 +71,7 @@ abstract class OAuth2ApiTestCase extends ApiTestCase
 
         $client = $clientManager->find($clientId);
 
-        if ($client !== null) {
+        if (null !== $client) {
             return;
         }
 
@@ -106,5 +79,32 @@ abstract class OAuth2ApiTestCase extends ApiTestCase
         $client->setActive(true);
 
         $clientManager->save($client);
+    }
+
+    private function generateOAuthAccessToken(
+        string $userIdentifier = null,
+        string $clientId = null,
+        array $scopes = []
+    ): string {
+        /** @var ClientRepositoryInterface $clientRepository */
+        $clientRepository = self::$container->get(ClientRepositoryInterface::class);
+        /** @var AccessTokenRepositoryInterface $tokenRepository */
+        $tokenRepository = self::$container->get(AccessTokenRepositoryInterface::class);
+
+        $clientId = $clientId ?? self::DEFAULT_CLIENT_ID;
+        $privateKey = new CryptKey($this->getRootDir() . self::PRIVATE_KEY_PATH, null, false);
+
+        $this->initClient($clientId);
+
+        $client = $clientRepository->getClientEntity($clientId);
+
+        $accessToken = $tokenRepository->getNewToken($client, $scopes, $userIdentifier);
+        $accessToken->setExpiryDateTime((new \DateTimeImmutable())->add(new \DateInterval('PT1H')));
+        $accessToken->setPrivateKey($privateKey);
+        $accessToken->setIdentifier((string) Uuid::v4());
+
+        $tokenRepository->persistNewAccessToken($accessToken);
+
+        return (string) $accessToken;
     }
 }

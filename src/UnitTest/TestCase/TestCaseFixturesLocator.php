@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace DevTools\UnitTest\TestCase;
 
@@ -48,4 +49,3 @@ final class TestCaseFixturesLocator implements FixtureLocatorInterface
         return array_merge($files, $testCaseFiles);
     }
 }
-

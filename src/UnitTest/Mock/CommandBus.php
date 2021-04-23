@@ -13,7 +13,7 @@ class CommandBus extends BaseCommandBus
     private array $queue = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function dispatch(object $command)
     {
