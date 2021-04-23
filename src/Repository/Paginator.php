@@ -11,13 +11,13 @@ use Doctrine\ORM\QueryBuilder;
 use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination as BundleSlidingPagination;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Pagination\SlidingPagination;
-use Knp\Component\Pager\Paginator as KnpPaginator;
+use Knp\Component\Pager\PaginatorInterface;
 
 class Paginator
 {
-    private KnpPaginator $paginator;
+    private PaginatorInterface $paginator;
 
-    public function __construct(KnpPaginator $paginator)
+    public function __construct(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
     }

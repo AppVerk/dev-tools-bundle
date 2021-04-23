@@ -3,8 +3,7 @@ services:
         autowire: true
         autoconfigure: true
 
-    DevTools\Repository\Paginator:
-        arguments: ['@knp_paginator']
+    DevTools\Repository\Paginator: ~
 
     DevTools\Validator\SortFieldsValidator: ~
 

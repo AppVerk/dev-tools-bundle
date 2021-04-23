@@ -1,0 +1,25 @@
+nelmio_api_doc:
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+    documentation:
+        info:
+            title: N-workshop api
+            description: N-workshop core application
+            version: 1.0.0
+        securityDefinitions:
+            password:
+                type: oauth2
+                description: provides a password flow access_token
+                flow: password
+                tokenUrl: /api/security/oauth/token
+                name: Authorization
+            client_credentials:
+                type: oauth2
+                description: provides a client_credentials flow access_token
+                flow: application
+                tokenUrl: /api/security/oauth/token
+                name: Authorization
+        security:
+            -   password: [ ]
+            -   client_credentials: [ ]
