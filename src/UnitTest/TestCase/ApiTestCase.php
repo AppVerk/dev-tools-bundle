@@ -100,8 +100,5 @@ abstract class ApiTestCase extends WebTestCase
         return $kernel;
     }
 
-    protected static function getFixturesDirectories(): array
-    {
-        return [];
-    }
+    abstract protected static function getFixturesDirectories(): array;
 }
