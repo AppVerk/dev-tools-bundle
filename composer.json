@@ -41,6 +41,8 @@
         "friendsofsymfony/rest-bundle": "Rest api implementation"
     },
     "require-dev": {
+        "coduo/php-matcher": "^6.0",
+        "hautelook/alice-bundle": "^2.9",
         "symfony/phpunit-bridge": "^4.4 || ^5.2",
         "friendsofphp/php-cs-fixer": "^2.18",
         "phpstan/phpstan-phpunit": "^0.12",

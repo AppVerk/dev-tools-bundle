@@ -66,3 +66,9 @@
 1. ```composer require nelmio/api-doc-bundle symfony/asset```
 
 2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/documentation with project root directory
+
+### Tests
+
+1. ```composer require coduo/php-matcher hautelook/alice-bundle```
+
+2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/tests with project root directory
