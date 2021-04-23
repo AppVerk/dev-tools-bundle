@@ -5,7 +5,7 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
     DevTools\Tests\Cases\TestCaseFixturesLocator:
-        decorates: ['@hautelook_alice.locator']
+        decorates: 'hautelook_alice.locator'
         arguments:
             - '@DevTools\Tests\Cases\TestCaseFixturesLocator.inner'
             - '%kernel.project_dir%/test/Functional/DataFixtures'
