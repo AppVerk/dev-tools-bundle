@@ -27,7 +27,7 @@ abstract class ApiTestCase extends WebTestCase
         $this->client = self::createClient();
     }
 
-    protected function getService($id): ?object
+    protected function getService(string $id): ?object
     {
         return self::$kernel->getContainer()->get($id);
     }
@@ -63,7 +63,7 @@ abstract class ApiTestCase extends WebTestCase
         $this->assertResponseCode($response, $statusCode);
 
         if (Response::HTTP_NO_CONTENT !== $statusCode) {
-            $this->assertResponseContent($this->prettifyJson($response->getContent()), $expectedContentFile);
+            $this->assertResponseContent($this->prettifyJson((string) $response->getContent()), $expectedContentFile);
         }
     }
 
@@ -72,22 +72,30 @@ abstract class ApiTestCase extends WebTestCase
         $this->assertEquals($statusCode, $response->getStatusCode());
     }
 
-    protected function prettifyJson($content): string
+    protected function prettifyJson(string $content): string
     {
-        return \json_encode(json_decode($content), \JSON_PRETTY_PRINT);
+        return (string) \json_encode((string) json_decode($content), \JSON_PRETTY_PRINT);
     }
 
     protected function loadJsonData(string $file): array
     {
-        return \json_decode(file_get_contents($file), true);
+        $content = file_get_contents($file);
+
+        if (false === $content) {
+            throw new \InvalidArgumentException(sprintf('Failed to load "%s" file.', $file));
+        }
+
+        return \json_decode($content, true);
     }
 
     protected static function bootKernel(array $options = [])
     {
         static::ensureKernelTestCase();
         $kernel = parent::bootKernel($options);
-        $fixtureLocator = static::$container->get(TestCaseFixturesLocator::class);
         self::$purgeWithTruncate = false;
+
+        /** @var TestCaseFixturesLocator $fixtureLocator */
+        $fixtureLocator = static::$container->get(TestCaseFixturesLocator::class);
 
         try {
             $fixtureLocator->setFixturesDirectories(static::getFixturesDirectories());

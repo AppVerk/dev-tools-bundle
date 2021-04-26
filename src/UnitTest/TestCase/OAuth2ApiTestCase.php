@@ -40,7 +40,7 @@ abstract class OAuth2ApiTestCase extends ApiTestCase
     {
         $allHeaders = array_merge(self::DEFAULT_REQUEST_HEADERS, $headers);
 
-        $this->client->request($method, $url, [], [], $allHeaders, json_encode($data));
+        $this->client->request($method, $url, [], [], $allHeaders, (string) json_encode($data));
 
         return $this->client->getResponse();
     }
@@ -59,7 +59,7 @@ abstract class OAuth2ApiTestCase extends ApiTestCase
         $allHeaders = array_merge(self::DEFAULT_REQUEST_HEADERS, $headers);
         $allHeaders['HTTP_AUTHORIZATION'] = "Bearer {$token}";
 
-        $this->client->request($method, $url, [], [], $allHeaders, json_encode($data));
+        $this->client->request($method, $url, [], [], $allHeaders, (string) json_encode($data));
 
         return $this->client->getResponse();
     }
