@@ -74,7 +74,7 @@ abstract class ApiTestCase extends WebTestCase
 
     protected function prettifyJson(string $content): string
     {
-        return (string) \json_encode((string) json_decode($content), \JSON_PRETTY_PRINT);
+        return (string) \json_encode(json_decode($content), \JSON_PRETTY_PRINT);
     }
 
     protected function loadJsonData(string $file): array
