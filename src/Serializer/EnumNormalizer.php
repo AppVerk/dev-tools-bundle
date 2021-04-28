@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\Serializer\Mock;
+namespace DevTools\Serializer;
 
 use MyCLabs\Enum\Enum;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;

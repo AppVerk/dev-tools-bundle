@@ -41,5 +41,5 @@ services:
     DevTools\Response\Includes\Resolver:
         arguments: ['@serializer.name_converter.metadata_aware']
 
-    DevTools\Serializer\Mock\EnumNormalizer:
+    DevTools\Serializer\EnumNormalizer:
         tags: [ 'serializer.normalizer' ]
