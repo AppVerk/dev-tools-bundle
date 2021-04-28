@@ -40,3 +40,6 @@ services:
     DevTools\Response\Includes\Parser: ~
     DevTools\Response\Includes\Resolver:
         arguments: ['@serializer.name_converter.metadata_aware']
+
+    DevTools\Serializer\Mock\EnumNormalizer:
+        tags: [ 'serializer.normalizer' ]
