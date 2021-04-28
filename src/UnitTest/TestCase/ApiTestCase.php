@@ -20,7 +20,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected $client;
 
-    protected string $responsesPath = '/tests/Functional/Responses';
+    protected string $responsesPath = '/tests/Functional';
 
     protected function setUp(): void
     {
