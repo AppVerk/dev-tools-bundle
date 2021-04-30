@@ -37,4 +37,9 @@ class CommandBus extends BaseCommandBus
     {
         $this->enabled = false;
     }
+
+    public function clear(): void
+    {
+        $this->queue = [];
+    }
 }

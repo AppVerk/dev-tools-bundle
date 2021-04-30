@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\UnitTest\TestCase;
+namespace DevTools\UnitTest\Fixtures;
 
 use Hautelook\AliceBundle\FixtureLocatorInterface;
 use Hautelook\AliceBundle\Locator\EnvDirectoryLocator;

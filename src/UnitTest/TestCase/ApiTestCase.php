@@ -5,6 +5,9 @@ declare(strict_types = 1);
 namespace DevTools\UnitTest\TestCase;
 
 use Coduo\PHPMatcher\PHPUnit\PHPMatcherAssertions;
+use DevTools\Messenger\CommandBus;
+use DevTools\UnitTest\Fixtures\TestCaseFixturesLocator;
+use DevTools\UnitTest\Mock\CommandBus as TestCommandBus;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -96,13 +99,21 @@ abstract class ApiTestCase extends WebTestCase
 
         /** @var TestCaseFixturesLocator $fixtureLocator */
         $fixtureLocator = static::$container->get(TestCaseFixturesLocator::class);
+        /** @var TestCommandBus $commandBus */
+        $commandBus = static::$container->get(CommandBus::class);
+
+        $fixtureLocator->setFixturesDirectories(static::getFixturesDirectories());
+        $commandBus->disable();
 
         try {
-            $fixtureLocator->setFixturesDirectories(static::getFixturesDirectories());
             static::populateDatabase();
         } finally {
-            $fixtureLocator->setFixturesDirectories([]);
             self::$purgeWithTruncate = true;
+
+            $fixtureLocator->setFixturesDirectories([]);
+
+            $commandBus->clear();
+            $commandBus->enable();
         }
 
         return $kernel;

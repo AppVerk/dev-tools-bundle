@@ -13,6 +13,7 @@ use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\EventBus;
 use DevTools\Messenger\QueryBus;
+use DevTools\UnitTest\Fixtures\AggregateRootProcessor;
 use MyCLabs\Enum\Enum;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,6 +35,7 @@ class DevToolsExtension extends Extension
         $this->configureDoctrine($config, $container);
         $this->configureBusses($config, $container);
         $this->configureApi($config, $container);
+        $this->configureTests($config, $container);
     }
 
     private function configureDoctrine(array $config, ContainerBuilder $container): void
@@ -94,6 +96,20 @@ class DevToolsExtension extends Extension
             $container->removeDefinition(ErrorRenderer::class);
             $container->removeDefinition(FlattenExceptionNormalizer::class);
             $container->removeDefinition(ResponseStatusCodeListener::class);
+        }
+    }
+
+    private function configureTests(array $config, ContainerBuilder $container): void
+    {
+        if (empty($config['tests']['register_helpers'])) {
+            $container->removeDefinition(AggregateRootProcessor::class);
+
+            return;
+        }
+
+        if ($container->hasDefinition(CommandBus::class)) {
+            $definition = $container->getDefinition(CommandBus::class);
+            $definition->setClass(\DevTools\UnitTest\Mock\CommandBus::class);
         }
     }
 }

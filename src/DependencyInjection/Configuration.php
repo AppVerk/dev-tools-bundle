@@ -86,6 +86,17 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('tests')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('register_helpers')
+                            ->defaultValue(false)
+                        ->end()
+                        ->scalarNode('fixtures_location')
+                            ->defaultValue('%kernel.project_dir%/tests/Functional')
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 
