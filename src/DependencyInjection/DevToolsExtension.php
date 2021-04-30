@@ -101,6 +101,8 @@ class DevToolsExtension extends Extension
 
     private function configureTests(array $config, ContainerBuilder $container): void
     {
+        $container->setParameter('dev_tools.tests.config', $config['tests']);
+
         if (empty($config['tests']['register_helpers'])) {
             $container->removeDefinition(AggregateRootProcessor::class);
 
