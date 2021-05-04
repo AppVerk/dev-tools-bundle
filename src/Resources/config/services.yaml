@@ -6,6 +6,7 @@ services:
     DevTools\Repository\Paginator: ~
 
     DevTools\Validator\SortFieldsValidator: ~
+    DevTools\Validator\UniqueEntityFieldValidator: ~
 
     DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber:
         tags:
