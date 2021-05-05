@@ -13,10 +13,10 @@
         ],
         "test": "bin/phpunit -d memory_limit=2G",
         "analyse": [
-            "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=estimating --dry-run",
+            "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots --dry-run",
             "phpstan analyse src tests -l 7"
         ],
-        "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=estimating"
+        "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots"
     }
     ```
 
