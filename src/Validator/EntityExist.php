@@ -10,25 +10,21 @@ use Symfony\Component\Validator\Constraint;
  * @Annotation
  * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
  */
-class UniqueEntityField extends Constraint
+class EntityExist extends Constraint
 {
-    public const NOT_UNIQUE_ERROR = '3744cfb0-cee5-4a50-b964-d6db1635b368';
+    public const NOT_FOUND_ERROR = 'cd100ad1-91fd-4f46-a45f-49bf7a032d70';
 
-    public string $message = 'This value is already used.';
-
-    public string $em = 'default';
-
-    public string $fieldName = 'id';
+    public string $message = 'Related entity not found.';
 
     public ?string $entityClass = null;
 
-    public string $repositoryMethod = 'findBy';
+    public string $repositoryMethod = 'exists';
 
     /**
      * @var string[]
      */
     protected static $errorNames = [
-        self::NOT_UNIQUE_ERROR => 'NOT_UNIQUE_ERROR',
+        self::NOT_FOUND_ERROR => 'NOT_FOUND_ERROR',
     ];
 
     /**
@@ -38,8 +34,6 @@ class UniqueEntityField extends Constraint
         array $options = [],
         string $entityClass = null,
         string $message = null,
-        string $fieldName = null,
-        string $em = null,
         string $repositoryMethod = null,
         array $groups = null,
         $payload = null
@@ -48,8 +42,6 @@ class UniqueEntityField extends Constraint
 
         $this->entityClass = $entityClass ?? $this->entityClass;
         $this->message = $message ?? $this->message;
-        $this->em = $em ?? $this->em;
         $this->repositoryMethod = $repositoryMethod ?? $this->repositoryMethod;
-        $this->fieldName = $fieldName ?? $this->fieldName;
     }
 }
