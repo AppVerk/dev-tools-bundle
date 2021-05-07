@@ -187,7 +187,7 @@ class CommandQueryParamConverter implements ParamConverterInterface
 
         $typeName = $type->getName();
 
-        if (Uuid::class === $typeName) {
+        if (Uuid::class === $typeName && !$value instanceof Uuid) {
             if (!Uuid::isValid((string) $value)) {
                 throw new BadRequestHttpException('Invalid uuid identifier provided');
             }
