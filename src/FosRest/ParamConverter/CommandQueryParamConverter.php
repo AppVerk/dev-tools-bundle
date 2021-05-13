@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SymfonySerializerException;
 use Symfony\Component\Uid\Uuid;
 
@@ -84,7 +85,8 @@ class CommandQueryParamConverter implements ParamConverterInterface
 
         try {
             $object = is_array($content)
-                ? $this->serializer->denormalize($content, $class, $format, $context)
+                // in this case we use CsvEncoder format to support valid string data denormalization
+                ? $this->serializer->denormalize($content, $class, CsvEncoder::FORMAT, $context)
                 : $this->serializer->deserialize('' === $content ? '{}' : $content, $class, $format, $context);
 
             if (is_object($object)) {
