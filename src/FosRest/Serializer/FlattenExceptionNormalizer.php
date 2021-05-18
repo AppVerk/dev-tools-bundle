@@ -4,38 +4,54 @@ declare(strict_types = 1);
 
 namespace DevTools\FosRest\Serializer;
 
-use FOS\RestBundle\Serializer\Normalizer\FlattenExceptionNormalizer as DecoratedFlattenExceptionNormalizer;
+use DevTools\Domain\Exception\TranslatableExceptionInterface;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
 use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
 {
-    /**
-     * @var DecoratedFlattenExceptionNormalizer
-     */
-    private $decoratedNormalizer;
+    private NormalizerInterface $decoratedNormalizer;
 
     private NameConverterInterface $nameConverter;
 
+    private TranslatorInterface $translator;
+
     public function __construct(
-        DecoratedFlattenExceptionNormalizer $decoratedHandler,
-        NameConverterInterface $nameConverter
+        NormalizerInterface $decoratedHandler,
+        NameConverterInterface $nameConverter,
+        TranslatorInterface $translator
     ) {
         $this->decoratedNormalizer = $decoratedHandler;
         $this->nameConverter = $nameConverter;
+        $this->translator = $translator;
     }
 
     /**
-     * {@inheritdoc}
+     * @param FlattenException $object
+     *
+     * @return array
      */
     public function normalize($object, string $format = null, array $context = [])
     {
-        $result = (array) $this->decoratedNormalizer->normalize($object, $format, $context);
-
         $exception = $context['exception'] ?? null;
+
+        if ($exception instanceof TranslatableExceptionInterface) {
+            $message = $this->translator->trans(
+                $exception->getMessageKey(),
+                $exception->getMessageData(),
+                $exception->getDomain()
+            );
+
+            $object->setMessage($message);
+        }
+
+        $result = (array) $this->decoratedNormalizer->normalize($object, $format, $context);
 
         if (!$exception instanceof ValidationFailedException) {
             return $result;
