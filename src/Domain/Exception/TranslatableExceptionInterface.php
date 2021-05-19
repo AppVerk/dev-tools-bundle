@@ -10,5 +10,5 @@ interface TranslatableExceptionInterface
 
     public function getMessageData(): array;
 
-    public function getDomain(): string;
+    public function getTranslationDomain(): string;
 }

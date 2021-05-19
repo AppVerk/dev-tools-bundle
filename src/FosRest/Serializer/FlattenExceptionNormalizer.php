@@ -45,7 +45,7 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
             $message = $this->translator->trans(
                 $exception->getMessageKey(),
                 $exception->getMessageData(),
-                $exception->getDomain()
+                $exception->getTranslationDomain()
             );
 
             $object->setMessage($message);
