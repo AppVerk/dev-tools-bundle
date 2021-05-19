@@ -65,7 +65,7 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
         }
 
         return array_merge($result, [
-            'message' => 'Validation failed.',
+            'message' => $this->translator->trans('Validation failed.'),
             'errors' => $errors,
         ]);
     }
