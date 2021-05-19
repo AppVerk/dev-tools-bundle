@@ -18,7 +18,7 @@ abstract class AbstractTranslatableException extends \RuntimeException implement
 
         parent::__construct($message, $code, $previous);
 
-        $this->messageKey = $message;
+        $this->messageKey = $messageKey;
         $this->messageData = $messageData;
     }
 
