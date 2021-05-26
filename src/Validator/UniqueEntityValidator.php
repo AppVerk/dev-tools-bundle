@@ -45,7 +45,7 @@ class UniqueEntityValidator extends AbstractEntityValidator
         $em = $this->registry->getManagerForClass($constraint->entityClass);
         $class = $em->getClassMetadata($constraint->entityClass);
 
-        $excludeValue = $this->getExcludedValue($this->context->getObject(), $constraint->excludeField);
+        $excludeValue = $this->getExcludedValue($this->context->getRoot(), $constraint->excludeField);
 
         $result = $this->assertEntityExists(
             $em,
