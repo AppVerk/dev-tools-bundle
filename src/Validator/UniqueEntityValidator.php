@@ -4,12 +4,24 @@ declare(strict_types = 1);
 
 namespace DevTools\Validator;
 
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class UniqueEntityValidator extends AbstractEntityValidator
 {
+    private PropertyAccessorInterface $propertyAccessor;
+
+    public function __construct(ManagerRegistry $registry, PropertyAccessorInterface $propertyAccessor)
+    {
+        parent::__construct($registry);
+
+        $this->propertyAccessor = $propertyAccessor;
+    }
+
     /**
      * @param mixed $value
      *
@@ -33,7 +45,15 @@ class UniqueEntityValidator extends AbstractEntityValidator
         $em = $this->registry->getManagerForClass($constraint->entityClass);
         $class = $em->getClassMetadata($constraint->entityClass);
 
-        $result = $this->assertEntityExists($em, $constraint->entityClass, $constraint->repositoryMethod, $value);
+        $excludeValue = $this->getExcludedValue($this->context->getObject(), $constraint->excludeField);
+
+        $result = $this->assertEntityExists(
+            $em,
+            $constraint->entityClass,
+            $constraint->repositoryMethod,
+            $value,
+            $excludeValue
+        );
 
         if (!$result) {
             return;
@@ -45,5 +65,25 @@ class UniqueEntityValidator extends AbstractEntityValidator
             ->setCause($result)
             ->addViolation()
         ;
+    }
+
+    /**
+     * @return null|mixed
+     */
+    private function getExcludedValue(?object $object, ?string $excludeField)
+    {
+        if (null === $object || null === $excludeField) {
+            return null;
+        }
+
+        try {
+            return $this->propertyAccessor->getValue($object, $excludeField);
+        } catch (NoSuchPropertyException $exception) {
+            throw new ConstraintDefinitionException(
+                sprintf('Invalid excluded field "%s" provided.', $excludeField),
+                0,
+                $exception
+            );
+        }
     }
 }
