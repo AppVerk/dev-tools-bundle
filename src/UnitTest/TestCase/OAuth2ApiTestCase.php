@@ -18,7 +18,7 @@ abstract class OAuth2ApiTestCase extends ApiTestCase
         'CONTENT_TYPE' => 'application/json',
     ];
 
-    protected const DEFAULT_USER_NAME = 'tester@appverk.com';
+    protected const DEFAULT_USER_NAME = 'admin@appverk.com';
 
     protected const DEFAULT_CLIENT_ID = '9b7f6ace2cd28c3d15f1d810bce6e589';
 
