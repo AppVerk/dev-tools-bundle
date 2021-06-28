@@ -10,7 +10,6 @@ security:
         app_user_provider:
             entity:
                 class: App\Security\Domain\Model\User
-                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
