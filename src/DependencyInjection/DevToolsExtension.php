@@ -11,6 +11,7 @@ use DevTools\FosRest\ParamConverter\CommandQueryParamConverter;
 use DevTools\FosRest\Serializer\FlattenExceptionNormalizer;
 use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use DevTools\Messenger\CommandBus;
+use DevTools\Messenger\CommandBusScheduler;
 use DevTools\Messenger\EventBus;
 use DevTools\Messenger\QueryBus;
 use DevTools\UnitTest\Fixtures\AggregateRootProcessor;
@@ -78,6 +79,13 @@ class DevToolsExtension extends Extension
                 CommandBus::class,
                 new Definition(CommandBus::class, [new Reference($config['command_bus']['name'])])
             );
+
+            if ($config['command_bus']['scheduler']) {
+                $container->setDefinition(
+                    CommandBusScheduler::class,
+                    new Definition(CommandBusScheduler::class, [new Reference(CommandBus::class)])
+                );
+            }
         }
 
         if ($config['query_bus']['enabled']) {
