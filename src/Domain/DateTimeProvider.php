@@ -4,12 +4,10 @@ declare(strict_types = 1);
 
 namespace DevTools\Domain;
 
-use DateTimeImmutable;
-
 class DateTimeProvider
 {
-    public function current(): DateTimeImmutable
+    public static function current(): \DateTimeImmutable
     {
-        return new DateTimeImmutable();
+        return new \DateTimeImmutable();
     }
 }
