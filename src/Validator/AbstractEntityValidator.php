@@ -93,7 +93,13 @@ abstract class AbstractEntityValidator extends ConstraintValidator
         $arguments = [$value, $excludeValue];
 
         foreach ($params as $index => $param) {
-            if (Uuid::class !== $param->getClass()->getName() || !is_string($arguments[$index] ?? null)) {
+            $type = $param->getType();
+
+            if (null === $type || Uuid::class !== $type->getName()) {
+                continue;
+            }
+
+            if (!is_string($arguments[$index] ?? null)) {
                 continue;
             }
 
