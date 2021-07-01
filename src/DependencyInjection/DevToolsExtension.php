@@ -83,7 +83,7 @@ class DevToolsExtension extends Extension
             if ($config['command_bus']['scheduler']) {
                 $container->setDefinition(
                     CommandBusScheduler::class,
-                    new Definition(CommandBusScheduler::class, [new Reference(CommandBus::class)])
+                    new Definition(CommandBusScheduler::class, [new Reference($config['command_bus']['name'])])
                 );
             }
         }
