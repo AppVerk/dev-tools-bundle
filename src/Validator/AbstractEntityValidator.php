@@ -7,6 +7,8 @@ namespace DevTools\Validator;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\ConstraintValidator;
 
 abstract class AbstractEntityValidator extends ConstraintValidator
@@ -31,7 +33,9 @@ abstract class AbstractEntityValidator extends ConstraintValidator
     ): bool {
         $repository = $em->getRepository($entityClass);
 
-        $result = $repository->{$repositoryMethod}($value, $excludeValue);
+        $arguments = $this->normalizeMethodArguments($repository, $repositoryMethod, $value, $excludeValue);
+
+        $result = call_user_func_array([$repository, $repositoryMethod], $arguments);
 
         return (bool) $result;
     }
@@ -77,5 +81,25 @@ abstract class AbstractEntityValidator extends ConstraintValidator
         });
 
         return sprintf('object("%s") identified by (%s)', $idClass, implode(', ', $identifiers));
+    }
+
+    protected function normalizeMethodArguments(
+        ObjectRepository $repository,
+        string $repositoryMethod,
+        $value,
+        $excludeValue
+    ): array {
+        $params = (new \ReflectionMethod($repository, $repositoryMethod))->getParameters();
+        $arguments = [$value, $excludeValue];
+
+        foreach ($params as $index => $param) {
+            if (Uuid::class !== $param->getClass()->getName() || !is_string($arguments[$index] ?? null)) {
+                continue;
+            }
+
+            $arguments[$index] = Uuid::fromString($arguments[$index]);
+        }
+
+        return $arguments;
     }
 }

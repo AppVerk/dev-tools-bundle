@@ -205,6 +205,10 @@ class CommandQueryParamConverter implements ParamConverterInterface
             return (float) $value;
         }
 
+        if ('string' === $typeName) {
+            return (string) $value;
+        }
+
         return $value;
     }
 

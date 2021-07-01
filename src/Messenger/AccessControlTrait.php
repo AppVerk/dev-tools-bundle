@@ -9,10 +9,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 trait AccessControlTrait
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authorizationChecker;
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
     public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker): void
     {

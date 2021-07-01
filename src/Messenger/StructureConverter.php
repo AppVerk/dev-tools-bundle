@@ -4,22 +4,27 @@ declare(strict_types = 1);
 
 namespace DevTools\Messenger;
 
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class StructureConverter
 {
-    private ObjectNormalizer $objectNormalizer;
+    private DenormalizerInterface $denormalizer;
 
-    public function __construct(ObjectNormalizer $objectNormalizer)
+    public function __construct(DenormalizerInterface $denormalizer)
     {
-        $this->objectNormalizer = $objectNormalizer;
+        $this->denormalizer = $denormalizer;
     }
 
     /**
+     * @param mixed $value
+     *
      * @return mixed|object
      */
-    public function toObject(AbstractStructure $structure, string $class)
+    public function toObject($value, string $class)
     {
-        return $this->objectNormalizer->denormalize($structure->toArray(), $class);
+        return $this->denormalizer->denormalize(
+            $value instanceof AbstractStructure ? $value->toArray() : $value,
+            $class
+        );
     }
 }
