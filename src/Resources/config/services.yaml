@@ -19,6 +19,9 @@ services:
     DevTools\FosRest\Serializer\SymfonySerializerAdapter:
         arguments: ['@serializer']
 
+    DevTools\FosRest\ParamConverter\DataNormalizer: ~
+    DevTools\FosRest\ParamConverter\DataExtractor: ~
+
     DevTools\FosRest\ParamConverter\CommandQueryParamConverter:
         tags:
             - { name: 'request.param_converter', converter: 'command_query', priority: 102 }

@@ -6,12 +6,13 @@ namespace DevTools\FosRest\Serializer;
 
 use DevTools\Domain\Exception\TranslatableExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
-use Symfony\Component\Messenger\Exception\ValidationFailedException;
+use Symfony\Component\Messenger\Exception\ValidationFailedException as MessengerValidationFailedException;
 use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
@@ -52,15 +53,22 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
         }
 
         $result = (array) $this->decoratedNormalizer->normalize($object, $format, $context);
+        $violations = null;
 
-        if (!$exception instanceof ValidationFailedException) {
+        if ($exception instanceof MessengerValidationFailedException) {
+            $violations = $exception->getViolations();
+        } elseif ($exception instanceof ValidationFailedException) {
+            $violations = $exception->getViolations();
+        }
+
+        if (null === $violations) {
             return $result;
         }
 
         $errors = [];
         /** @var ConstraintViolation $item */
         foreach ($exception->getViolations() as $item) {
-            $property = $this->nameConverter->normalize($item->getPropertyPath());
+            $property = $this->normalizePropertyPath($item->getPropertyPath());
             $errors[$property][] = $item->getMessage();
         }
 
@@ -77,5 +85,17 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
     {
         return $this->decoratedNormalizer->supportsNormalization($data, $format)
             && empty($context[Serializer::MESSENGER_SERIALIZATION_CONTEXT]);
+    }
+
+    private function normalizePropertyPath(string $path): string
+    {
+        $tokens = explode(']', str_replace('[', '', $path));
+        $result = '';
+
+        foreach ($tokens as $token) {
+            $result .= ctype_digit($token) ? "[{$token}]" : ".{$token}";
+        }
+
+        return $this->nameConverter->normalize(trim($result, '.'));
     }
 }
