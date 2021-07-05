@@ -64,6 +64,9 @@ class SymfonySerializerAdapter
         return $this->serializer->denormalize($data, $type, $format, $newContext);
     }
 
+    /**
+     * @return mixed
+     */
     public function decode(string $data, string $format, Context $context)
     {
         $newContext = $this->convertContext($context);

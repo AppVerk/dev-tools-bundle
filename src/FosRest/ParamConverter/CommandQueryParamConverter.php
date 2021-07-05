@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SymfonySerializerException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CommandQueryParamConverter implements ParamConverterInterface
 {
@@ -30,7 +29,6 @@ class CommandQueryParamConverter implements ParamConverterInterface
 
     public function __construct(
         SymfonySerializerAdapter $serializer,
-        ValidatorInterface $validator,
         DataNormalizer $dataNormalizer,
         DataExtractor $dataExtractor,
         array $groups = null,
@@ -46,7 +44,6 @@ class CommandQueryParamConverter implements ParamConverterInterface
             $this->context['version'] = $version;
         }
 
-        $this->validator = $validator;
         $this->dataNormalizer = $dataNormalizer;
         $this->dataExtractor = $dataExtractor;
     }

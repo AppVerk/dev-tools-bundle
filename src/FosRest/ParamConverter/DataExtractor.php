@@ -79,6 +79,11 @@ class DataExtractor
         return $map[$property->getName()] ?? $property->getName();
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     private function normalizeValue($value)
     {
         if (is_scalar($value)) {

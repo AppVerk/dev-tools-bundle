@@ -62,7 +62,7 @@ class DataNormalizer
         }
 
         if ('string' === $type) {
-            if (is_scalar($value) || is_object($value) && method_exists('__toString', $value)) {
+            if (is_scalar($value) || is_object($value) && method_exists($value, '__toString')) {
                 return (string) $value;
             }
 
@@ -73,10 +73,9 @@ class DataNormalizer
     }
 
     /**
-     * @param ClassMetadata $metadata
-     * @param mixed         $rawData
+     * @param ClassMetadata|MetadataInterface $metadata
      */
-    private function normalizeData(MetadataInterface $metadata, $rawData)
+    private function normalizeData(MetadataInterface $metadata, array $rawData): array
     {
         foreach ($metadata->properties as $property) {
             if (!isset($rawData[$property->property])) {

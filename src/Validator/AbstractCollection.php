@@ -9,6 +9,9 @@ use Symfony\Component\Validator\Constraints\CollectionValidator;
 
 abstract class AbstractCollection extends Collection
 {
+    /**
+     * @var bool
+     */
     public $allowExtraFields = true;
 
     public function __construct($options = null)
