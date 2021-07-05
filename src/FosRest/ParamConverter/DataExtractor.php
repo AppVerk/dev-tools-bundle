@@ -37,24 +37,6 @@ class DataExtractor
         return $this->enrichDataFromRequestAttributes($class, $baseData, $request, $attributesMap, $loggedField);
     }
 
-    private function resolveAttributeName(\ReflectionProperty $property, array $map): string
-    {
-        return $map[$property->getName()] ?? $property->getName();
-    }
-
-    private function normalizeValue($value)
-    {
-        if (is_scalar($value)) {
-            return $value;
-        }
-
-        if (is_object($value) && method_exists($value, '__toString')) {
-            return (string) $value;
-        }
-
-        return $value;
-    }
-
     protected function enrichDataFromRequestAttributes(
         string $class,
         array $baseData,
@@ -90,5 +72,23 @@ class DataExtractor
         }
 
         return $baseData;
+    }
+
+    private function resolveAttributeName(\ReflectionProperty $property, array $map): string
+    {
+        return $map[$property->getName()] ?? $property->getName();
+    }
+
+    private function normalizeValue($value)
+    {
+        if (is_scalar($value)) {
+            return $value;
+        }
+
+        if (is_object($value) && method_exists($value, '__toString')) {
+            return (string) $value;
+        }
+
+        return $value;
     }
 }

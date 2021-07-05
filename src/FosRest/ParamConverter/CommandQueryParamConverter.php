@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SymfonySerializerException;
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CommandQueryParamConverter implements ParamConverterInterface
@@ -25,8 +23,6 @@ class CommandQueryParamConverter implements ParamConverterInterface
     private SymfonySerializerAdapter $serializer;
 
     private array $context = [];
-
-    private ValidatorInterface $validator;
 
     private DataNormalizer $dataNormalizer;
 
@@ -78,13 +74,8 @@ class CommandQueryParamConverter implements ParamConverterInterface
 
         $class = $configuration->getClass();
         $rawData = $this->dataExtractor->extract($request, $format, $context, $class, $options);
-        $rawDataConstraint = $this->buildDataConstraint($class);
 
-        $normalizedData = $this->dataNormalizer->normalize($rawData, $rawDataConstraint);
-
-        if (null !== $rawDataConstraint) {
-            $this->validateRawData($normalizedData, $rawDataConstraint, $rawData);
-        }
+        $normalizedData = $this->dataNormalizer->normalize($rawData, $class);
 
         try {
             $object = $this->serializer->denormalize($normalizedData, $class, $format, $context);
@@ -105,15 +96,6 @@ class CommandQueryParamConverter implements ParamConverterInterface
         return null !== $configuration->getClass()
             && in_array($configuration->getConverter(), self::SUPPORTED_NAMES)
             && in_array($configuration->getName(), self::SUPPORTED_ARGUMENTS);
-    }
-
-    protected function validateRawData(?array $normalizedData, Constraint $rawDataConstraint, $rawData): void
-    {
-        $violations = $this->validator->validate($normalizedData, $rawDataConstraint);
-
-        if ($violations->count()) {
-            throw new ValidationFailedException($rawData, $violations);
-        }
     }
 
     private function configureContext(Context $context, array $options): void
@@ -140,12 +122,5 @@ class CommandQueryParamConverter implements ParamConverterInterface
         }
 
         throw $exception;
-    }
-
-    private function buildDataConstraint(string $class): ?Constraint
-    {
-        $constraintClass = str_replace('\\Domain\\', '\\Validator\\', $class);
-
-        return class_exists($constraintClass) ? new $constraintClass() : null;
     }
 }
