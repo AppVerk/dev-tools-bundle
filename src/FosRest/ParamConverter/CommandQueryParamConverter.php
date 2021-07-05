@@ -11,10 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInte
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SymfonySerializerException;
-use Symfony\Component\Uid\Uuid;
 
 class CommandQueryParamConverter implements ParamConverterInterface
 {
@@ -22,39 +19,33 @@ class CommandQueryParamConverter implements ParamConverterInterface
 
     private const SUPPORTED_NAMES = ['', 'command_query'];
 
-    private const DEFAULT_USER_LOGGED_FIELD = 'userId';
+    private SymfonySerializerAdapter $serializer;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $token;
+    private array $context = [];
 
-    /**
-     * @var SymfonySerializerAdapter
-     */
-    private $serializer;
+    private DataNormalizer $dataNormalizer;
 
-    /**
-     * @var array
-     */
-    private $context = [];
+    private DataExtractor $dataExtractor;
 
     public function __construct(
         SymfonySerializerAdapter $serializer,
-        TokenStorageInterface $token,
+        DataNormalizer $dataNormalizer,
+        DataExtractor $dataExtractor,
         array $groups = null,
         string $version = null
     ) {
         $this->serializer = $serializer;
-        $this->token = $token;
 
         if (!empty($groups)) {
-            $this->context['groups'] = (array) $groups;
+            $this->context['groups'] = $groups;
         }
 
         if (!empty($version)) {
             $this->context['version'] = $version;
         }
+
+        $this->dataNormalizer = $dataNormalizer;
+        $this->dataExtractor = $dataExtractor;
     }
 
     /**
@@ -62,7 +53,7 @@ class CommandQueryParamConverter implements ParamConverterInterface
      */
     public function apply(Request $request, ParamConverter $configuration): bool
     {
-        $options = (array) $configuration->getOptions();
+        $options = $configuration->getOptions();
 
         if (isset($options['deserializationContext']) && is_array($options['deserializationContext'])) {
             $arrayContext = array_merge($this->context, $options['deserializationContext']);
@@ -79,24 +70,12 @@ class CommandQueryParamConverter implements ParamConverterInterface
         }
 
         $class = $configuration->getClass();
-        $content = Request::METHOD_GET === $request->getMethod()
-            ? $request->query->all()
-            : $request->getContent();
+        $rawData = $this->dataExtractor->extract($request, $format, $context, $class, $options);
+
+        $normalizedData = $this->dataNormalizer->normalize($rawData, $class);
 
         try {
-            $object = is_array($content)
-                // in this case we use CsvEncoder format to support valid string data denormalization
-                ? $this->serializer->denormalize($content, $class, CsvEncoder::FORMAT, $context)
-                : $this->serializer->deserialize('' === $content ? '{}' : $content, $class, $format, $context);
-
-            if (is_object($object)) {
-                $this->setDataFromAttributes(
-                    $object,
-                    $request,
-                    $options['loggedUserField'] ?? self::DEFAULT_USER_LOGGED_FIELD,
-                    $options['map'] ?? []
-                );
-            }
+            $object = $this->serializer->denormalize($normalizedData, $class, $format, $context);
         } catch (SymfonySerializerException $e) {
             return $this->throwException(new BadRequestHttpException($e->getMessage(), $e), $configuration);
         }
@@ -140,80 +119,5 @@ class CommandQueryParamConverter implements ParamConverterInterface
         }
 
         throw $exception;
-    }
-
-    private function setDataFromAttributes(
-        object $object,
-        Request $request,
-        string $loggedField,
-        array $attributesMap = []
-    ): void {
-        $reflectionClass = new \ReflectionClass($object);
-        $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
-
-        foreach ($properties as $property) {
-            if (null !== $property->getValue($object)) {
-                continue;
-            }
-
-            $value = $request->attributes->get($this->resolveAttributeName($property, $attributesMap));
-
-            if (null !== $value) {
-                $property->setValue($object, $this->normalizeValue($value, $property->getType()));
-
-                continue;
-            }
-
-            if ($property->getName() === $loggedField) {
-                $user = $this->token->getToken()->getUser();
-
-                if (!method_exists($user, 'getId')) {
-                    continue;
-                }
-
-                $property->setValue($object, $this->normalizeValue($user->getId(), $property->getType()));
-            }
-        }
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    private function normalizeValue($value, ?\ReflectionType $type)
-    {
-        if (null === $type) {
-            return ctype_digit($value) ? (int) $value : $value;
-        }
-
-        $typeName = $type->getName();
-
-        if (Uuid::class === $typeName && !$value instanceof Uuid) {
-            if (!Uuid::isValid((string) $value)) {
-                throw new BadRequestHttpException('Invalid uuid identifier provided');
-            }
-
-            return Uuid::fromString($value);
-        }
-
-        if ('int' === $typeName) {
-            return (int) $value;
-        }
-
-        if ('float' === $typeName) {
-            return (float) $value;
-        }
-
-        if ('string' === $typeName) {
-            return (string) $value;
-        }
-
-        return $value;
-    }
-
-    private function resolveAttributeName(\ReflectionProperty $property, array $map): string
-    {
-        return $map[$property->getName()] ?? $property->getName();
     }
 }

@@ -83,6 +83,10 @@ abstract class AbstractEntityValidator extends ConstraintValidator
         return sprintf('object("%s") identified by (%s)', $idClass, implode(', ', $identifiers));
     }
 
+    /**
+     * @param mixed $value
+     * @param mixed $excludeValue
+     */
     protected function normalizeMethodArguments(
         ObjectRepository $repository,
         string $repositoryMethod,

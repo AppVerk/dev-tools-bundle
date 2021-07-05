@@ -10,11 +10,17 @@ trait PaginatedListQueryTrait
 {
     /**
      * @Assert\GreaterThanOrEqual(1)
+     * @Assert\Type("int")
+     *
+     * @var mixed
      */
-    public int $page = 1;
+    public $page = 1;
 
     /**
      * @Assert\Range(min="1", max="300")
+     * @Assert\Type("int")
+     *
+     * @var mixed
      */
-    public int $limit = 10;
+    public $limit = 10;
 }
