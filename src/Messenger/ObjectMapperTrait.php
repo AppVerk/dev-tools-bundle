@@ -13,6 +13,11 @@ trait ObjectMapperTrait
         $this->objectMapper = $objectMapper;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return null|mixed|object
+     */
     protected function convertTo($value, string $class)
     {
         return $this->objectMapper->toObject($value, $class);

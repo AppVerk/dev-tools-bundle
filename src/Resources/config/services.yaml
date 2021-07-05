@@ -52,4 +52,4 @@ services:
     DevTools\UnitTest\Fixtures\AggregateRootProcessor:
         tags: [ 'fidry_alice_data_fixtures.processor' ]
 
-    DevTools\Messenger\StructureConverter: ~
+    DevTools\Messenger\ObjectMapper: ~

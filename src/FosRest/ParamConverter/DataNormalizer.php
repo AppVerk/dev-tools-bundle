@@ -4,37 +4,36 @@ declare(strict_types = 1);
 
 namespace DevTools\FosRest\ParamConverter;
 
-use Symfony\Component\Validator\Constraints\Collection;
-use Symfony\Component\Validator\Constraints\Existence;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Composite;
+use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Uuid;
+use Symfony\Component\Validator\Mapping\CascadingStrategy;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\MetadataInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DataNormalizer
 {
+    private ValidatorInterface $validator;
+
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
     public function normalize(?array $rawData, string $class): ?array
     {
-        $result = $rawData;
-
-        if (null === $rawData) {
-            return $result;
+        if (null === $rawData || !$this->validator->hasMetadataFor($class)) {
+            return $rawData;
         }
 
-        if ($constraint instanceof Collection) {
-            foreach ($constraint->fields as $key => $field) {
-                if (!$field instanceof Existence || !isset($result[$key])) {
-                    continue;
-                }
+        $metadata = $this->validator->getMetadataFor($class);
 
-                foreach ($field->constraints as $nestedConstraint) {
-                    if ($nestedConstraint instanceof Collection) {
-                        $result[$key] = $this->normalize($result[$key], $nestedConstraint);
-                    } elseif ($nestedConstraint instanceof Type) {
-                        $result[$key] = $this->castValue($nestedConstraint->type, $result[$key]);
-                    }
-                }
-            }
-        }
-
-        return $rawData;
+        return $this->normalizeData($metadata, $rawData);
     }
 
     /**
@@ -62,6 +61,88 @@ class DataNormalizer
             return null === $newValue ? $value : $newValue;
         }
 
+        if ('string' === $type) {
+            if (is_scalar($value) || is_object($value) && method_exists('__toString', $value)) {
+                return (string) $value;
+            }
+
+            return $value;
+        }
+
         return $value;
+    }
+
+    /**
+     * @param ClassMetadata $metadata
+     * @param mixed         $rawData
+     */
+    private function normalizeData(MetadataInterface $metadata, $rawData)
+    {
+        foreach ($metadata->properties as $property) {
+            if (!isset($rawData[$property->property])) {
+                continue;
+            }
+
+            $propertyType = $metadata
+                ->getReflectionClass()
+                ->getProperty($property->getName())
+                ->getType()
+            ;
+
+            if (null !== $propertyType && !$propertyType->isBuiltin()) {
+                if (CascadingStrategy::CASCADE !== $property->cascadingStrategy) {
+                    continue;
+                }
+
+                if (!$this->validator->hasMetadataFor($propertyType->getName())) {
+                    continue;
+                }
+
+                $rawData[$property->property] = $this->normalizeData(
+                    $this->validator->getMetadataFor($propertyType->getName()),
+                    $rawData[$property->property]
+                );
+
+                continue;
+            }
+
+            foreach ($property->constraints as $constraint) {
+                $type = $this->determineTypeByConstraint($constraint);
+
+                if (null === $type) {
+                    continue;
+                }
+
+                $rawData[$property->property] = $this->castValue($type, $rawData[$property->property]);
+            }
+        }
+
+        return $rawData;
+    }
+
+    private function determineTypeByConstraint(Constraint $constraint): ?string
+    {
+        if ($constraint instanceof Composite) {
+            foreach ($constraint->getNestedContraints() as $nestedContraint) {
+                $result = $this->determineTypeByConstraint($nestedContraint);
+
+                if (null !== $result) {
+                    return $result;
+                }
+            }
+        }
+
+        switch (get_class($constraint)) {
+            case Uuid::class:
+            case Length::class:
+            case DateTime::class:
+                return 'string';
+            case Choice::class:
+                return $constraint->multiple ? null : 'string';
+            case Type::class:
+                return $constraint->type;
+        }
+
+        return null;
     }
 }
