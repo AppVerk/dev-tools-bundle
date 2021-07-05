@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace DevTools\FosRest\ParamConverter;
 
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\Existence;
 use Symfony\Component\Validator\Constraints\Type;
 
 class DataNormalizer
 {
-    public function normalize(?array $rawData, $constraint): ?array
+    public function normalize(?array $rawData, Constraint $constraint): ?array
     {
         $result = $rawData;
 
@@ -37,6 +38,11 @@ class DataNormalizer
         return $rawData;
     }
 
+    /**
+     * @param string $type
+     * @param mixed $value
+     * @return mixed
+     */
     protected function castValue(string $type, $value)
     {
         if ('int' === $type) {

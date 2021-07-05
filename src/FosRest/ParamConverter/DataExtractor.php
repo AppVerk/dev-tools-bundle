@@ -31,10 +31,39 @@ class DataExtractor
             ? $request->query->all()
             : ('' === $content ? [] : $this->serializer->decode($content, $format, $context));
 
-        $reflectionClass = new \ReflectionClass($class);
-        $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
         $attributesMap = $options['map'] ?? [];
         $loggedField = $options['loggedUserField'] ?? self::DEFAULT_USER_LOGGED_FIELD;
+
+        return $this->enrichDataFromRequestAttributes($class, $baseData, $request, $attributesMap, $loggedField);
+    }
+
+    private function resolveAttributeName(\ReflectionProperty $property, array $map): string
+    {
+        return $map[$property->getName()] ?? $property->getName();
+    }
+
+    private function normalizeValue($value)
+    {
+        if (is_scalar($value)) {
+            return $value;
+        }
+
+        if (is_object($value) && method_exists($value, '__toString')) {
+            return (string) $value;
+        }
+
+        return $value;
+    }
+
+    protected function enrichDataFromRequestAttributes(
+        string $class,
+        array $baseData,
+        Request $request,
+        array $attributesMap,
+        string $loggedField
+    ): array {
+        $reflectionClass = new \ReflectionClass($class);
+        $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
 
         foreach ($properties as $property) {
             if (isset($baseData[$property->getName()])) {
@@ -61,23 +90,5 @@ class DataExtractor
         }
 
         return $baseData;
-    }
-
-    private function resolveAttributeName(\ReflectionProperty $property, array $map): string
-    {
-        return $map[$property->getName()] ?? $property->getName();
-    }
-
-    private function normalizeValue($value)
-    {
-        if (is_scalar($value)) {
-            return $value;
-        }
-
-        if (is_object($value) && method_exists($value, '__toString')) {
-            return (string) $value;
-        }
-
-        return $value;
     }
 }
