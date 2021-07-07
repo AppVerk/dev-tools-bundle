@@ -10,6 +10,6 @@ $finder = PhpCsFixer\Finder::create()
     ->name('*.php')
 ;
 
-require_once 'vendor/app-verk/feevapp-vendor/CsFixerConfig.php';
+require_once 'vendor/app-verk/dev-tools-bundle/CsFixerConfig.php';
 
 return CsFixerConfig::create()->setFinder($finder);
