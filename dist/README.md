@@ -1,5 +1,5 @@
 ### Base
-1. ```composer require sensio/framework-extra-bundle sentry/sentry-symfony```
+1. ```composer require sensio/framework-extra-bundle symfony/security-bundle```
 
 2. ```composer require --dev friendsofphp/php-cs-fixer phpstan/phpstan-symfony phpstan/phpstan-phpunit symfony/test-pack symfony/profiler-pack```
 
@@ -20,7 +20,10 @@
     }
     ```
 
-4. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/base with project root directory
+4. ```composer require sentry/sentry-symfony```
+
+
+5. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/base with project root directory
 
 ### Jwt auth
 
