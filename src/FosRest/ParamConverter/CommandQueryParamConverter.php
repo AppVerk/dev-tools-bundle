@@ -69,6 +69,7 @@ class CommandQueryParamConverter implements ParamConverterInterface
             return $this->throwException(new UnsupportedMediaTypeHttpException(), $configuration);
         }
 
+        /** @var class-string $class */
         $class = $configuration->getClass();
         $rawData = $this->dataExtractor->extract($request, $format, $context, $class, $options);
 

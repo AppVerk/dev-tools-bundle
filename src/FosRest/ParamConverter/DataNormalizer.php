@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Mapping\CascadingStrategy;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Mapping\MetadataInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DataNormalizer
@@ -31,6 +30,7 @@ class DataNormalizer
             return $rawData;
         }
 
+        /** @var ClassMetadata $metadata */
         $metadata = $this->validator->getMetadataFor($class);
 
         return $this->normalizeData($metadata, $rawData);
@@ -56,6 +56,7 @@ class DataNormalizer
         }
 
         if ('bool' === $type) {
+            /** @var null|bool $newValue */
             $newValue = filter_var($value, FILTER_VALIDATE_BOOL);
 
             return null === $newValue ? $value : $newValue;
@@ -72,10 +73,7 @@ class DataNormalizer
         return $value;
     }
 
-    /**
-     * @param ClassMetadata|MetadataInterface $metadata
-     */
-    private function normalizeData(MetadataInterface $metadata, array $rawData): array
+    private function normalizeData(ClassMetadata $metadata, array $rawData): array
     {
         foreach ($metadata->properties as $property) {
             if (!isset($rawData[$property->property])) {
@@ -97,10 +95,9 @@ class DataNormalizer
                     continue;
                 }
 
-                $rawData[$property->property] = $this->normalizeData(
-                    $this->validator->getMetadataFor($propertyType->getName()),
-                    $rawData[$property->property]
-                );
+                /** @var ClassMetadata $propertyMetadata */
+                $propertyMetadata = $this->validator->getMetadataFor($propertyType->getName());
+                $rawData[$property->property] = $this->normalizeData($propertyMetadata, $rawData[$property->property]);
 
                 continue;
             }

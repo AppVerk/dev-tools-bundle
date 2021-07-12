@@ -23,6 +23,9 @@ class DataExtractor
         $this->tokenStorage = $tokenStorage;
     }
 
+    /**
+     * @param class-string $class
+     */
     public function extract(Request $request, string $format, Context $context, string $class, array $options): array
     {
         $content = $request->getContent();
@@ -37,6 +40,9 @@ class DataExtractor
         return $this->enrichDataFromRequestAttributes($class, $baseData, $request, $attributesMap, $loggedField);
     }
 
+    /**
+     * @param class-string $class
+     */
     protected function enrichDataFromRequestAttributes(
         string $class,
         array $baseData,
@@ -63,11 +69,9 @@ class DataExtractor
             if ($property->getName() === $loggedField) {
                 $user = $this->tokenStorage->getToken()->getUser();
 
-                if (!method_exists($user, 'getId')) {
-                    continue;
+                if (method_exists($user, 'getId')) {
+                    $baseData[$property->getName()] = $this->normalizeValue($user->getId());
                 }
-
-                $baseData[$property->getName()] = $this->normalizeValue($user->getId());
             }
         }
 
