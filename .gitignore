@@ -9,3 +9,4 @@ composer.lock
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+/.php_cs.cache

@@ -5,8 +5,10 @@ $finder = PhpCsFixer\Finder::create()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
+    ->notPath('DependencyInjection/Configuration.php')
+    ->name('*.php')
 ;
 
 require_once 'CsFixerConfig.php';
 
-return CsFixerConfig::create()->setFinder($finder);
+return (new CsFixerConfig())->setFinder($finder);

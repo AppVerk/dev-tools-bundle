@@ -33,7 +33,8 @@
         "symfony/security-core": "^4.4 || ^5.2",
         "symfony/uid": "^5.2",
         "knplabs/knp-paginator-bundle": "^5.0",
-        "timostamm/doctrine-fixed-timezone": "^1.1"
+        "timostamm/doctrine-fixed-timezone": "^1.1",
+        "sensio/framework-extra-bundle": "^5.5"
     },
     "suggest": {
         "sentry/sentry-symfony": "To handle application monitoring",
@@ -46,6 +47,19 @@
         "symfony/phpunit-bridge": "^4.4 || ^5.2",
         "friendsofphp/php-cs-fixer": "^2.18",
         "phpstan/phpstan-phpunit": "^0.12",
-        "phpstan/phpstan-symfony": "^0.12"
+        "phpstan/phpstan-symfony": "^0.12",
+        "myclabs/php-enum": "^1.8",
+        "acelaya/doctrine-enum-type": "^2.5",
+        "timeweb/phpstan-enum": "^2.3",
+        "friendsofsymfony/rest-bundle": "^3.0",
+        "trikoder/oauth2-bundle": "^3.2",
+        "symfony/browser-kit": "^4.4 || ^5.2"
+    },
+    "scripts": {
+        "analyse": [
+            "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots --dry-run",
+            "phpstan analyse src tests -l 7"
+        ],
+        "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots"
     }
 }

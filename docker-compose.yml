@@ -1,0 +1,24 @@
+version: '3.5'
+services:
+  php:
+    build:
+      context: .
+    volumes:
+      - .:/app:delegated
+      - /app/.idea #exclude from synchronization
+    secrets:
+      - source: ssh_private_key
+        target: /root/.ssh/id_rsa
+      - source: ssh_known_hosts
+        target: /root/.ssh/known_hosts
+    environment:
+      XDEBUG_CLIENT_HOST: host.docker.internal
+      PHP_IDE_CONFIG: "serverName=dev_tools"
+    ports:
+      - "4022:22"
+
+secrets:
+  ssh_private_key:
+    file: ~/.ssh/id_rsa
+  ssh_known_hosts:
+    file: ~/.ssh/known_hosts

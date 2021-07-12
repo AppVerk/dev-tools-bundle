@@ -21,8 +21,9 @@ abstract class AbstractEntityValidator extends ConstraintValidator
     }
 
     /**
-     * @param mixed      $value
-     * @param null|mixed $excludeValue
+     * @param class-string $entityClass
+     * @param mixed        $value
+     * @param null|mixed   $excludeValue
      */
     protected function assertEntityExists(
         ObjectManager $em,
@@ -35,7 +36,7 @@ abstract class AbstractEntityValidator extends ConstraintValidator
 
         $arguments = $this->normalizeMethodArguments($repository, $repositoryMethod, $value, $excludeValue);
 
-        $result = call_user_func_array([$repository, $repositoryMethod], $arguments);
+        $result = $repository->{$repositoryMethod}(...$arguments);
 
         return (bool) $result;
     }

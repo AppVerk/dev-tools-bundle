@@ -4,12 +4,8 @@ declare(strict_types = 1);
 
 namespace DevTools\DependencyInjection;
 
-use DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber;
 use DevTools\FosRest\ErrorHandler\ErrorRenderer;
-use DevTools\FosRest\EventListener\ResponseStatusCodeListener;
-use DevTools\FosRest\ParamConverter\CommandQueryParamConverter;
 use DevTools\FosRest\Serializer\FlattenExceptionNormalizer;
-use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\CommandBusScheduler;
 use DevTools\Messenger\EventBus;
@@ -41,10 +37,6 @@ class DevToolsExtension extends Extension
 
     private function configureDoctrine(array $config, ContainerBuilder $container): void
     {
-        if (!$config['doctrine']['location_types']) {
-            $container->removeDefinition(DBALSchemaEventSubscriber::class);
-        }
-
         if (!empty($config['doctrine']['enum_types'])) {
             if (!class_exists('Acelaya\Doctrine\Type\PhpEnumType')) {
                 throw new \LogicException(
@@ -99,11 +91,11 @@ class DevToolsExtension extends Extension
     private function configureApi(array $config, ContainerBuilder $container): void
     {
         if (!$config['api']['fos_rest']) {
-            $container->removeDefinition(CommandQueryParamConverter::class);
-            $container->removeDefinition(SymfonySerializerAdapter::class);
+            $container->removeDefinition('DevTools\\FosRest\\ParamConverter\\CommandQueryParamConverter');
+            $container->removeDefinition('DevTools\\FosRest\\Serializer\\SymfonySerializerAdapter');
             $container->removeDefinition(ErrorRenderer::class);
             $container->removeDefinition(FlattenExceptionNormalizer::class);
-            $container->removeDefinition(ResponseStatusCodeListener::class);
+            $container->removeDefinition('DevTools\\FosRest\\EventListener\\ResponseStatusCodeListener');
         }
     }
 

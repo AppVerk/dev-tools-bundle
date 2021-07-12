@@ -18,10 +18,7 @@ abstract class ApiTestCase extends WebTestCase
     use PHPMatcherAssertions;
     use BaseDatabaseTrait;
 
-    /**
-     * @var KernelBrowser
-     */
-    protected $client;
+    protected KernelBrowser $client;
 
     protected string $responsesPath = '/tests/Functional';
 

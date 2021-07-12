@@ -22,7 +22,10 @@ class EntityExistValidator extends AbstractEntityValidator
             throw new UnexpectedTypeException($constraint, EntityExist::class);
         }
 
-        if (null === $constraint->entityClass) {
+        /** @var class-string|null $entityClass */
+        $entityClass = $constraint->entityClass;
+
+        if (null === $entityClass) {
             throw new ConstraintDefinitionException('Entity class should be fined.');
         }
 
@@ -30,10 +33,10 @@ class EntityExistValidator extends AbstractEntityValidator
             return;
         }
 
-        $em = $this->registry->getManagerForClass($constraint->entityClass);
-        $class = $em->getClassMetadata($constraint->entityClass);
+        $em = $this->registry->getManagerForClass($entityClass);
+        $class = $em->getClassMetadata($entityClass);
 
-        $result = $this->assertEntityExists($em, $constraint->entityClass, $constraint->repositoryMethod, $value);
+        $result = $this->assertEntityExists($em, $entityClass, $constraint->repositoryMethod, $value);
 
         if ($result) {
             return;
