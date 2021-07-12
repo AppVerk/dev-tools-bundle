@@ -8,6 +8,7 @@ use DevTools\FosRest\Serializer\SymfonySerializerAdapter;
 use FOS\RestBundle\Context\Context;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class DataExtractor
 {
@@ -17,10 +18,16 @@ class DataExtractor
 
     private TokenStorageInterface $tokenStorage;
 
-    public function __construct(SymfonySerializerAdapter $serializer, TokenStorageInterface $tokenStorage)
-    {
+    private NameConverterInterface $nameConverter;
+
+    public function __construct(
+        SymfonySerializerAdapter $serializer,
+        TokenStorageInterface $tokenStorage,
+        NameConverterInterface $nameConverter
+    ) {
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
+        $this->nameConverter = $nameConverter;
     }
 
     /**
@@ -54,14 +61,16 @@ class DataExtractor
         $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
 
         foreach ($properties as $property) {
-            if (isset($baseData[$property->getName()])) {
+            $dataKey = $this->nameConverter->normalize($property->getName());
+
+            if (isset($baseData[$dataKey])) {
                 continue;
             }
 
             $value = $request->attributes->get($this->resolveAttributeName($property, $attributesMap));
 
             if (null !== $value) {
-                $baseData[$property->getName()] = $this->normalizeValue($value);
+                $baseData[$dataKey] = $this->normalizeValue($value);
 
                 continue;
             }
@@ -70,7 +79,7 @@ class DataExtractor
                 $user = $this->tokenStorage->getToken()->getUser();
 
                 if (method_exists($user, 'getId')) {
-                    $baseData[$property->getName()] = $this->normalizeValue($user->getId());
+                    $baseData[$dataKey] = $this->normalizeValue($user->getId());
                 }
             }
         }
