@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace DevTools\FosRest\ParamConverter;
 
+use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Composite;
@@ -19,8 +20,11 @@ class DataNormalizer
 {
     private ValidatorInterface $validator;
 
-    public function __construct(ValidatorInterface $validator)
+    private NameConverterInterface $nameConverter;
+
+    public function __construct(NameConverterInterface $nameConverter, ValidatorInterface $validator)
     {
+        $this->nameConverter = $nameConverter;
         $this->validator = $validator;
     }
 
@@ -76,7 +80,9 @@ class DataNormalizer
     private function normalizeData(ClassMetadata $metadata, array $rawData): array
     {
         foreach ($metadata->properties as $property) {
-            if (!isset($rawData[$property->property])) {
+            $dataKey = $this->nameConverter->normalize($property->getPropertyName());
+
+            if (!isset($rawData[$dataKey])) {
                 continue;
             }
 
@@ -97,7 +103,7 @@ class DataNormalizer
 
                 /** @var ClassMetadata $propertyMetadata */
                 $propertyMetadata = $this->validator->getMetadataFor($propertyType->getName());
-                $rawData[$property->property] = $this->normalizeData($propertyMetadata, $rawData[$property->property]);
+                $rawData[$dataKey] = $this->normalizeData($propertyMetadata, $rawData[$dataKey]);
 
                 continue;
             }
@@ -105,11 +111,11 @@ class DataNormalizer
             foreach ($property->constraints as $constraint) {
                 $type = $this->determineTypeByConstraint($constraint);
 
-                if (null === $type) {
-                    continue;
-                }
+                if (null !== $type) {
+                    $rawData[$dataKey] = $this->castValue($type, $rawData[$dataKey]);
 
-                $rawData[$property->property] = $this->castValue($type, $rawData[$property->property]);
+                    break;
+                }
             }
         }
 
