@@ -21,13 +21,13 @@ class DataExtractor
     private NameConverterInterface $nameConverter;
 
     public function __construct(
+        NameConverterInterface $nameConverter,
         SymfonySerializerAdapter $serializer,
-        TokenStorageInterface $tokenStorage,
-        NameConverterInterface $nameConverter
+        TokenStorageInterface $tokenStorage
     ) {
+        $this->nameConverter = $nameConverter;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
-        $this->nameConverter = $nameConverter;
     }
 
     /**

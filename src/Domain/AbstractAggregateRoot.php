@@ -42,12 +42,16 @@ abstract class AbstractAggregateRoot
         return $pendingEvents;
     }
 
-    public function recordThat(AbstractAggregateRootEvent $event): void
+    public function attachEvent(AbstractAggregateRootEvent $event): void
     {
         ++$this->version;
 
         $this->recordedEvents[] = $event->withVersion($this->version);
+    }
 
+    protected function recordThat(AbstractAggregateRootEvent $event): void
+    {
+        $this->attachEvent($event);
         $this->apply($event);
     }
 }

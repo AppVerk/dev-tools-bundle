@@ -22,10 +22,10 @@ class DataNormalizer
 
     private NameConverterInterface $nameConverter;
 
-    public function __construct(ValidatorInterface $validator, NameConverterInterface $nameConverter)
+    public function __construct(NameConverterInterface $nameConverter, ValidatorInterface $validator)
     {
-        $this->validator = $validator;
         $this->nameConverter = $nameConverter;
+        $this->validator = $validator;
     }
 
     public function normalize(?array $rawData, string $class): ?array
