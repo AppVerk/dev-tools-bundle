@@ -9,10 +9,6 @@ services:
     DevTools\Validator\UniqueEntityValidator: ~
     DevTools\Validator\EntityExistValidator: ~
 
-    DevTools\Doctrine\MySql\Event\DBALSchemaEventSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber }
-
     DevTools\Utils\TokenGeneratorInterface:
         class: DevTools\Utils\TokenGenerator
 
