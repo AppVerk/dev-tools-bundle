@@ -48,6 +48,9 @@ services:
     DevTools\Serializer\EnumNormalizer:
         tags: [ 'serializer.normalizer' ]
 
+    DevTools\Serializer\ArrayObjectDenormalizer:
+        tags: [ 'serializer.normalizer' ]
+
     DevTools\UnitTest\Fixtures\AggregateRootProcessor:
         tags: [ 'fidry_alice_data_fixtures.processor' ]
 
