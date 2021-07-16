@@ -18,3 +18,4 @@ parameters:
         - '#Call to an undefined method ReflectionType::getName\(\)#'
         - '#Cannot call method getId\(\) on class-string\|Stringable\|.*UserInterface#'
         - '#Call to an undefined method object::getProjectDir\(\)#'
+        - '#Binary operation "\+" between array<class-string, class-string>\&nonEmpty and array<string, class-string>\|false results in an error#'

@@ -8,10 +8,7 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class ClassBasedStrategy implements RoutingStrategyInterface
 {
-    /**
-     * @var NameConverterInterface
-     */
-    private $nameConverter;
+    private NameConverterInterface $nameConverter;
 
     public function __construct(NameConverterInterface $nameConverter)
     {
@@ -20,23 +17,35 @@ class ClassBasedStrategy implements RoutingStrategyInterface
 
     public function getClass(string $routingKey, array $context): ?string
     {
-        if (empty($context['class_map'])) {
+        $parts = explode('.', $routingKey);
+
+        if (empty($context['class_map']) || empty($parts)) {
             return null;
         }
 
-        preg_match('/(.*)\.([^.]*)$/', $routingKey, $matches);
+        $className = $this->nameConverter->denormalize(end($parts));
+        $baseClass = false;
 
-        if (empty($matches[2])) {
+        while (!empty($parts)) {
+            $mapKey = implode('.', $parts);
+            $baseClass = array_search($mapKey, $context['class_map']);
+
+            if (false !== $baseClass) {
+                break;
+            }
+
+            array_pop($parts);
+        }
+
+        if (!is_string($baseClass) || !class_exists($baseClass)) {
             return null;
         }
 
-        $namespace = array_search($matches[1], $context['class_map']);
+        $reflection = new \ReflectionClass($baseClass);
 
-        if (false === $namespace) {
-            return null;
-        }
-
-        return $namespace . '\\' . $this->nameConverter->denormalize($matches[2]);
+        return $reflection->getShortName() === $className
+            ? $baseClass
+            : $reflection->getNamespaceName() . '\\' . $className;
     }
 
     /**
@@ -44,20 +53,31 @@ class ClassBasedStrategy implements RoutingStrategyInterface
      */
     public function getRoutingKey(string $class, array $context): ?string
     {
-        if (empty($context['class_map'])) {
-            return null;
+        $routingKeyPath = null;
+
+        foreach ($this->listTypes($class) as $type) {
+            if (isset($context['class_map'][$type])) {
+                $routingKeyPath = $context['class_map'][$type];
+
+                break;
+            }
         }
-
-        $reflection = new \ReflectionClass($class);
-
-        $routingKeyPath = $context['class_map'][$reflection->getNamespaceName()] ?? null;
 
         if (null === $routingKeyPath) {
             return null;
         }
 
+        $reflection = new \ReflectionClass($class);
         $messageName = $this->nameConverter->normalize($reflection->getShortName());
 
         return $routingKeyPath . '.' . $messageName;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function listTypes(string $class): array
+    {
+        return [$class => $class] + class_parents($class) + class_implements($class);
     }
 }
