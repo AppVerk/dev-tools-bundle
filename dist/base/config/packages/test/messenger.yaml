@@ -4,4 +4,4 @@ framework:
             # Route your messages to the transports
             'DevTools\Messenger\AsyncMessageInterface': sync
             'DevTools\Messenger\AsyncSlowMessageInterface': sync
-            'DevTools\Messenger\SyncMessageInterface': sync
+            'DevTools\Domain\AbstractAggregateRootEvent': sync

@@ -14,12 +14,11 @@ framework:
                 options:
                     queue_name: slow
             sync: 'sync://'
-
         routing:
             # Route your messages to the transports
             'DevTools\Messenger\AsyncMessageInterface': async
             'DevTools\Messenger\AsyncSlowMessageInterface': async_slow
-            'DevTools\Messenger\SyncMessageInterface': sync
+            'DevTools\Domain\AbstractAggregateRootEvent': async
 
         default_bus: command_bus
         buses:
