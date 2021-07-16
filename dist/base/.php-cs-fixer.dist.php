@@ -3,7 +3,6 @@
 $finder = PhpCsFixer\Finder::create()
     ->in([
         __DIR__ . '/src',
-        __DIR__ . '/vendor/app-verk/feevapp-vendor/src',
         __DIR__ . '/tests',
     ])
     ->notPath('DependencyInjection/Configuration.php')
@@ -12,4 +11,4 @@ $finder = PhpCsFixer\Finder::create()
 
 require_once 'vendor/app-verk/dev-tools-bundle/CsFixerConfig.php';
 
-return CsFixerConfig::create()->setFinder($finder);
+return (new CsFixerConfig())->setFinder($finder);
