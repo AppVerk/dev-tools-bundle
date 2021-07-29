@@ -1,5 +1,5 @@
 ### Base
-1. ```composer require sensio/framework-extra-bundle symfony/security-bundle```
+1. ```composer require symfony/security-bundle```
 
 2. ```composer require --dev friendsofphp/php-cs-fixer phpstan/phpstan-symfony phpstan/phpstan-phpunit symfony/test-pack symfony/profiler-pack```
 
@@ -8,15 +8,15 @@
     {
         "setup": [
             "bin/console doctrine:database:create --if-not-exists",
-            "bin/console doctrine:schema:create",
+            "bin/console doctrine:migrations:migrate -n",
             "bin/console messenger:setup-transports"
         ],
         "test": "bin/phpunit -d memory_limit=2G",
         "analyse": [
-            "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots --dry-run",
+            "php-cs-fixer fix --diff --verbose --show-progress=dots --dry-run",
             "phpstan analyse src tests -l 7"
         ],
-        "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots"
+        "cs-fix": "php-cs-fixer fix --diff --verbose --show-progress=dots"
     }
     ```
 

@@ -8,5 +8,5 @@ monolog:
             channels: ["!event"]
         nested:
             type: stream
-            path: "php://stderr"
+            path: php://stderr
             level: debug
