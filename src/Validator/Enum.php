@@ -26,6 +26,7 @@ class Enum extends Choice
      * @param null|mixed        $payload
      */
     public function __construct(
+        array $options = [],
         string $class = null,
         bool $multiple = null,
         bool $strict = null,
@@ -36,15 +37,14 @@ class Enum extends Choice
         string $minMessage = null,
         string $maxMessage = null,
         $groups = null,
-        $payload = null,
-        array $options = []
+        $payload = null
     ) {
         $this->class = $class;
 
         $callback = function () {
             $class = $this->class;
 
-            if (null === $class || !is_subclass_of(AbstractEnum::class, $class)) {
+            if (null === $class || !is_subclass_of($class, AbstractEnum::class)) {
                 throw new ConstraintDefinitionException(sprintf(
                     'The Enum constraint expects class parameter to be subclass of %s.',
                     AbstractEnum::class
@@ -77,5 +77,21 @@ class Enum extends Choice
     public function validatedBy()
     {
         return ChoiceValidator::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultOption()
+    {
+        return 'class';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredOptions()
+    {
+        return ['class'];
     }
 }
