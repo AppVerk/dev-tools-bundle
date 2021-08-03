@@ -70,7 +70,11 @@ class ClassBasedStrategy implements RoutingStrategyInterface
         $reflection = new \ReflectionClass($class);
         $messageName = $this->nameConverter->normalize($reflection->getShortName());
 
-        return $routingKeyPath . '.' . $messageName;
+        if ('.' !== mb_substr($routingKeyPath, -1)) {
+            $routingKeyPath .= '.';
+        }
+
+        return $routingKeyPath . $messageName;
     }
 
     /**
