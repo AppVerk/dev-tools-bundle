@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace DevTools\Messenger;
 
+use DevTools\Serializer\ContextualNameConverter;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class ObjectMapper
@@ -28,7 +29,9 @@ class ObjectMapper
 
         return $this->denormalizer->denormalize(
             is_object($value) ? $this->convertObjectToArray($value) : $value,
-            $class
+            $class,
+            null,
+            [ContextualNameConverter::DISABLE_CONVERSION_TAG => true]
         );
     }
 
