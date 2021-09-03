@@ -30,6 +30,10 @@ class ClassBasedStrategy implements RoutingStrategyInterface
             $mapKey = implode('.', $parts);
             $baseClass = array_search($mapKey, $context['class_map']);
 
+            if (false === $baseClass) {
+                $baseClass = array_search($mapKey . '.', $context['class_map']);
+            }
+
             if (false !== $baseClass) {
                 break;
             }
