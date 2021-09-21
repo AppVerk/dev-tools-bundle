@@ -9,6 +9,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class ObjectMapper
 {
+    private const COLLECTION_MARKER = '[]';
+
     private DenormalizerInterface $denormalizer;
 
     public function __construct(DenormalizerInterface $denormalizer)
@@ -19,7 +21,7 @@ class ObjectMapper
     /**
      * @param mixed $value
      *
-     * @return mixed|object
+     * @return mixed
      */
     public function toObject($value, string $class)
     {
@@ -28,7 +30,7 @@ class ObjectMapper
         }
 
         return $this->denormalizer->denormalize(
-            is_object($value) ? $this->convertObjectToArray($value) : $value,
+            $this->normalizeValue($value, $class),
             $class,
             null,
             [ContextualNameConverter::DISABLE_CONVERSION_TAG => true]
@@ -56,5 +58,25 @@ class ObjectMapper
         }
 
         return $values;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    protected function normalizeValue($value, string $class = null)
+    {
+        if (is_object($value)) {
+            return $this->convertObjectToArray($value);
+        }
+
+        if (is_array($value) && null !== $class && self::COLLECTION_MARKER === mb_substr($class, -2)) {
+            return array_map(function ($item) {
+                return $this->normalizeValue($item);
+            }, $value);
+        }
+
+        return $value;
     }
 }
