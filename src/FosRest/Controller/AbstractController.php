@@ -6,12 +6,12 @@ namespace DevTools\FosRest\Controller;
 
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\QueryBus;
+use DevTools\Repository\PaginatedResult;
 use DevTools\Response\Includes\MapInterface;
 use DevTools\Response\Includes\Resolver;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Response;
-use DevTools\Repository\PaginatedResult;
 
 abstract class AbstractController extends AbstractFOSRestController
 {
