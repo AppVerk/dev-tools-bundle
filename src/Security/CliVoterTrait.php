@@ -7,6 +7,9 @@ namespace DevTools\Security;
 use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * @deprecated Use \DevTools\Security\Authorization\Voter\AbstractVoter instead
+ */
 trait CliVoterTrait
 {
     public function isRunningInCli(TokenInterface $token): bool
