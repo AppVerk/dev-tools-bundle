@@ -32,9 +32,9 @@ abstract class AbstractController extends AbstractFOSRestController
     /**
      * @return null|mixed
      */
-    protected function dispatchCommand(object $command)
+    protected function dispatchCommand(object $command, bool $forceSyncProcessing = false)
     {
-        return $this->getCommandBus()->dispatch($command);
+        return $this->getCommandBus()->dispatch($command, $forceSyncProcessing);
     }
 
     /**

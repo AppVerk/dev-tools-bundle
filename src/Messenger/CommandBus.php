@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace DevTools\Messenger;
 
+use DevTools\Messenger\Stamp\ForcedSenderStamp;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
@@ -22,9 +23,15 @@ class CommandBus
     /**
      * @return mixed
      */
-    public function dispatch(object $command)
+    public function dispatch(object $command, bool $forceSyncProcessing = false)
     {
-        $envelope = $this->messageBus->dispatch($command);
+        $stamps = [];
+
+        if ($forceSyncProcessing) {
+            $stamps[] = new ForcedSenderStamp('sync');
+        }
+
+        $envelope = $this->messageBus->dispatch($command, $stamps);
 
         /** @var HandledStamp[] $handledStamps */
         $handledStamps = $envelope->all(HandledStamp::class);

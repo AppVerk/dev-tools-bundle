@@ -59,6 +59,8 @@ class DevToolsExtension extends Extension
 
     private function configureBusses(array $config, ContainerBuilder $container): void
     {
+        $container->setParameter('dev_tools.command_bus.config', $config['command_bus']);
+
         if ($config['event_bus']['enabled']) {
             $container->setDefinition(
                 EventBus::class,

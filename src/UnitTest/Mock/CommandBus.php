@@ -15,10 +15,10 @@ class CommandBus extends BaseCommandBus
     /**
      * {@inheritdoc}
      */
-    public function dispatch(object $command)
+    public function dispatch(object $command, bool $forceSyncProcessing = false)
     {
         if ($this->enabled) {
-            return parent::dispatch($command);
+            return parent::dispatch($command, $forceSyncProcessing);
         }
 
         $this->queue[] = $command;

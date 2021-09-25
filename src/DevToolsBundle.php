@@ -7,6 +7,7 @@ namespace DevTools;
 use Acelaya\Doctrine\Type\PhpEnumType;
 use DevTools\DependencyInjection\Compiler\AccessControlHandlerPass;
 use DevTools\DependencyInjection\Compiler\AddDoctrineMappingPass;
+use DevTools\DependencyInjection\Compiler\ConfigureMessageBusesPass;
 use DevTools\DependencyInjection\Compiler\RegisterTestHelpersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -20,6 +21,7 @@ class DevToolsBundle extends Bundle
         $container->addCompilerPass(new AccessControlHandlerPass());
         $container->addCompilerPass(new AddDoctrineMappingPass());
         $container->addCompilerPass(new RegisterTestHelpersPass());
+        $container->addCompilerPass(new ConfigureMessageBusesPass());
     }
 
     public function boot(): void
