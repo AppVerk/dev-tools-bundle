@@ -47,7 +47,7 @@
 
 ### FosRest
 
-1. ```composer require friendsofsymfony/rest-bundle```
+1. ```composer require friendsofsymfony/rest-bundle sensio/framework-extra-bundle symfony/twig-bundle```
 
 2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/fos-rest with project root directory
 
@@ -72,6 +72,6 @@
 
 ### Tests
 
-1. ```composer require coduo/php-matcher hautelook/alice-bundle```
+1. ```composer require --dev coduo/php-matcher hautelook/alice-bundle```
 
 2. Copy/merge files from vendor/app-verk/dev-tools-bundle/dist/tests with project root directory

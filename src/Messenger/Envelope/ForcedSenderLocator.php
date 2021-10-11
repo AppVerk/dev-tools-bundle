@@ -28,7 +28,11 @@ class ForcedSenderLocator implements SendersLocatorInterface
         $stamp = $envelope->last(ForcedSenderStamp::class);
 
         if (null === $stamp) {
-            return $this->decorated->getSenders($envelope);
+            foreach ($this->decorated->getSenders($envelope) as $senderAlias => $sender) {
+                yield $senderAlias => $sender;
+            }
+
+            return;
         }
 
         $senderAlias = $stamp->getSenderAlias();
