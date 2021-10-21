@@ -19,6 +19,12 @@ abstract class AbstractAggregateRoot
     protected int $version = 0;
 
     /**
+     * @ORM\Column(type="integer")
+     * @ORM\Version
+     */
+    protected int $lockVersion = 0;
+
+    /**
      * @var AbstractAggregateRootEvent[]
      */
     protected array $recordedEvents = [];
@@ -47,6 +53,11 @@ abstract class AbstractAggregateRoot
         ++$this->version;
 
         $this->recordedEvents[] = $event->withVersion($this->version);
+    }
+
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 
     protected function recordThat(AbstractAggregateRootEvent $event): void
