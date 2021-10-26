@@ -9,7 +9,10 @@ use DevTools\FosRest\Serializer\FlattenExceptionNormalizer;
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\CommandBusScheduler;
 use DevTools\Messenger\EventBus;
+use DevTools\Messenger\Middleware\StreamWorkflowMiddleware;
 use DevTools\Messenger\QueryBus;
+use DevTools\Messenger\StreamWorkflow\Lock;
+use DevTools\Messenger\StreamWorkflow\StreamWorkflow;
 use DevTools\UnitTest\Fixtures\AggregateRootProcessor;
 use MyCLabs\Enum\Enum;
 use Symfony\Component\Config\FileLocator;
@@ -30,7 +33,10 @@ class DevToolsExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $this->configureDoctrine($config, $container);
-        $this->configureBusses($config, $container);
+        $this->configureCommandBus($config, $container);
+        $this->configureEventBus($config, $container);
+        $this->configureQueryBus($config, $container);
+        $this->configureStreamWorkflow($config, $container);
         $this->configureApi($config, $container);
         $this->configureTests($config, $container);
     }
@@ -54,39 +60,6 @@ class DevToolsExtension extends Extension
             }
 
             $container->setParameter('dev_tools.doctrine.enum_types.config', $config['doctrine']['enum_types']);
-        }
-    }
-
-    private function configureBusses(array $config, ContainerBuilder $container): void
-    {
-        $container->setParameter('dev_tools.command_bus.config', $config['command_bus']);
-
-        if ($config['event_bus']['enabled']) {
-            $container->setDefinition(
-                EventBus::class,
-                new Definition(EventBus::class, [new Reference($config['event_bus']['name'])])
-            );
-        }
-
-        if ($config['command_bus']['enabled']) {
-            $container->setDefinition(
-                CommandBus::class,
-                new Definition(CommandBus::class, [new Reference($config['command_bus']['name'])])
-            );
-
-            if ($config['command_bus']['scheduler']) {
-                $container->setDefinition(
-                    CommandBusScheduler::class,
-                    new Definition(CommandBusScheduler::class, [new Reference($config['command_bus']['name'])])
-                );
-            }
-        }
-
-        if ($config['query_bus']['enabled']) {
-            $container->setDefinition(
-                QueryBus::class,
-                new Definition(QueryBus::class, [new Reference($config['query_bus']['name'])])
-            );
         }
     }
 
@@ -114,6 +87,79 @@ class DevToolsExtension extends Extension
         if ($container->hasDefinition(CommandBus::class)) {
             $definition = $container->getDefinition(CommandBus::class);
             $definition->setClass(\DevTools\UnitTest\Mock\CommandBus::class);
+        }
+    }
+
+    private function configureStreamWorkflow(array $config, ContainerBuilder $container): void
+    {
+        $workflowConfig = $config['stream_workflow'];
+
+        if (!$workflowConfig['enabled']) {
+            return;
+        }
+
+        if (isset($workflowConfig['storage'], $workflowConfig['lock_factory'])) {
+            $container->setDefinition(
+                'dev_tools.stream_workflow.lock',
+                new Definition(Lock::class, [new Reference($workflowConfig['lock_factory'])])
+            );
+
+            $container->setDefinition(
+                'dev_tools.stream_workflow',
+                new Definition(
+                    StreamWorkflow::class,
+                    [new Reference($workflowConfig['storage']), new Reference('dev_tools.stream_workflow.lock')]
+                )
+            );
+
+            $container->setDefinition(
+                'dev_tools.stream_workflow.middleware',
+                new Definition(StreamWorkflowMiddleware::class, [new Reference('dev_tools.stream_workflow')])
+            );
+        }
+    }
+
+    private function configureCommandBus(array $config, ContainerBuilder $container): void
+    {
+        $container->setParameter('dev_tools.command_bus.config', $config['command_bus']);
+
+        if (!$config['command_bus']['enabled']) {
+            return;
+        }
+
+        $container->setDefinition(
+            CommandBus::class,
+            new Definition(
+                CommandBus::class,
+                [new Reference($config['command_bus']['name']), $config['command_bus']['default_transport']]
+            )
+        );
+
+        if ($config['command_bus']['scheduler']) {
+            $container->setDefinition(
+                CommandBusScheduler::class,
+                new Definition(CommandBusScheduler::class, [new Reference($config['command_bus']['name'])])
+            );
+        }
+    }
+
+    private function configureEventBus(array $config, ContainerBuilder $container): void
+    {
+        if ($config['event_bus']['enabled']) {
+            $container->setDefinition(
+                EventBus::class,
+                new Definition(EventBus::class, [new Reference($config['event_bus']['name'])])
+            );
+        }
+    }
+
+    private function configureQueryBus(array $config, ContainerBuilder $container): void
+    {
+        if ($config['query_bus']['enabled']) {
+            $container->setDefinition(
+                QueryBus::class,
+                new Definition(QueryBus::class, [new Reference($config['query_bus']['name'])])
+            );
         }
     }
 }

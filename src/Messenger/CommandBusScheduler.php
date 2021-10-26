@@ -9,10 +9,7 @@ use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 class CommandBusScheduler
 {
-    /**
-     * @var MessageBusInterface
-     */
-    private $messageBus;
+    private MessageBusInterface $messageBus;
 
     public function __construct(MessageBusInterface $messageBus)
     {

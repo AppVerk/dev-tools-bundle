@@ -4,13 +4,13 @@ declare(strict_types = 1);
 
 namespace DevTools\Messenger\Envelope;
 
-use DevTools\Messenger\Stamp\ForcedSenderStamp;
+use DevTools\Messenger\Stamp\DefaultTransportStamp;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\RuntimeException;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
 
-class ForcedSenderLocator implements SendersLocatorInterface
+class SenderLocator implements SendersLocatorInterface
 {
     private SendersLocatorInterface $decorated;
 
@@ -24,18 +24,22 @@ class ForcedSenderLocator implements SendersLocatorInterface
 
     public function getSenders(Envelope $envelope): iterable
     {
-        /** @var null|ForcedSenderStamp $stamp */
-        $stamp = $envelope->last(ForcedSenderStamp::class);
+        foreach ($this->decorated->getSenders($envelope) as $senderAlias => $sender) {
+            yield $senderAlias => $sender;
+        }
 
-        if (null === $stamp) {
-            foreach ($this->decorated->getSenders($envelope) as $senderAlias => $sender) {
-                yield $senderAlias => $sender;
-            }
+        /** @var null|DefaultTransportStamp $stamp */
+        $stamp = $envelope->last(DefaultTransportStamp::class);
 
+        if (null === $stamp || isset($sender)) {
             return;
         }
 
-        $senderAlias = $stamp->getSenderAlias();
+        $senderAlias = $stamp->getTransportName();
+
+        if ($senderAlias === DefaultTransportStamp::SYNC) {
+            return;
+        }
 
         if (!$this->sendersLocator->has($senderAlias)) {
             throw new RuntimeException(sprintf(
