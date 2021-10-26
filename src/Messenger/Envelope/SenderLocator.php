@@ -37,7 +37,7 @@ class SenderLocator implements SendersLocatorInterface
 
         $senderAlias = $stamp->getTransportName();
 
-        if ($senderAlias === DefaultTransportStamp::SYNC) {
+        if (DefaultTransportStamp::SYNC === $senderAlias) {
             return;
         }
 

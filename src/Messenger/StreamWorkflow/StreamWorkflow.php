@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace DevTools\Messenger\StreamWorkflow;
 
@@ -9,6 +10,7 @@ use DevTools\Messenger\Stamp\StreamWorkflowStamp;
 class StreamWorkflow
 {
     private const PROCESSED_COMMAND_STATUS = 'processed';
+
     private const PENDING_COMMAND_STATUS = 'pending';
 
     private StorageInterface $storage;
@@ -49,7 +51,7 @@ class StreamWorkflow
         );
 
         try {
-            $newStamp = $streamPosition === null ? null : $workflowStamp->withRequiredPosition($streamPosition);
+            $newStamp = null === $streamPosition ? null : $workflowStamp->withRequiredPosition($streamPosition);
 
             return $processor($newStamp);
         } catch (\Throwable $exception) {
@@ -89,7 +91,7 @@ class StreamWorkflow
             $requiredPosition
         );
 
-        if ($requiredItemStatus === self::PROCESSED_COMMAND_STATUS) {
+        if (self::PROCESSED_COMMAND_STATUS === $requiredItemStatus) {
             $result = $processor();
 
             $this->storage->setItemStatus(

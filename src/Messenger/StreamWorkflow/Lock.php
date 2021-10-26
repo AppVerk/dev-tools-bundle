@@ -1,17 +1,19 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace DevTools\Messenger\StreamWorkflow;
 
 use DevTools\Messenger\Exception\UnableToAcquireExclusivity;
-use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Lock as SymfonyLock;
+use Symfony\Component\Lock\LockFactory;
 
 class Lock
 {
     private const LOCK_PREFIX = 'stream_workflow';
 
     private const DEFAULT_TTL = 3600;
+
     private const CACHED_ITEMS_COUNT = 50;
 
     private ?int $ttl;

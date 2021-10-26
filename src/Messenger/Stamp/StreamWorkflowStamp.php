@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace DevTools\Messenger\Stamp;
 
@@ -23,33 +24,21 @@ class StreamWorkflowStamp implements StampInterface
         $this->requiredPosition = $requiredPosition;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->namespace;
     }
 
-    /**
-     * @return string
-     */
     public function getWorkflowId(): string
     {
         return $this->workflowId;
     }
 
-    /**
-     * @return int
-     */
     public function getCurrentPosition(): int
     {
         return $this->currentPosition;
     }
 
-    /**
-     * @return int|null
-     */
     public function getRequiredPosition(): ?int
     {
         return $this->requiredPosition;

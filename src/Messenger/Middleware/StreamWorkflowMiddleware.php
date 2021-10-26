@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace DevTools\Messenger\Middleware;
 
 use DevTools\Messenger\Stamp\StreamWorkflowStamp;
@@ -20,9 +22,9 @@ class StreamWorkflowMiddleware implements MiddlewareInterface
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
-        /** @var StreamWorkflowStamp|null $workflowStamp */
+        /** @var null|StreamWorkflowStamp $workflowStamp */
         $workflowStamp = $envelope->last(StreamWorkflowStamp::class);
-        /** @var ReceivedStamp|null $workflowStamp */
+        /** @var null|ReceivedStamp $workflowStamp */
         $receivedStamp = $envelope->last(ReceivedStamp::class);
 
         if (null !== $workflowStamp) {
@@ -39,7 +41,7 @@ class StreamWorkflowMiddleware implements MiddlewareInterface
 
             return $this->workflow->addItem(
                 $workflowStamp,
-                function(?StreamWorkflowStamp $newStamp) use ($stack, $envelope) {
+                function (?StreamWorkflowStamp $newStamp) use ($stack, $envelope) {
                     $newEnvelope = null === $newStamp
                         ? $envelope
                         : $envelope->withoutAll(StreamWorkflowStamp::class)->with($newStamp)

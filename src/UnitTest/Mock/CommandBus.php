@@ -23,7 +23,6 @@ class CommandBus extends BaseCommandBus
 
         $this->queue[] = $command;
 
-        return null;
     }
 
     public function enable(): void
