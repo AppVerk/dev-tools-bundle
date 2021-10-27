@@ -40,7 +40,9 @@
     "suggest": {
         "sentry/sentry-symfony": "To handle application monitoring",
         "acelaya/doctrine-enum-type": "Enums implementation",
-        "friendsofsymfony/rest-bundle": "Rest api implementation"
+        "friendsofsymfony/rest-bundle": "Rest api implementation",
+        "ext-redis": "*",
+        "ext-amqp": "*"
     },
     "require-dev": {
         "coduo/php-matcher": "^6.0",
