@@ -23,6 +23,8 @@ class CommandBus
 
     /**
      * @param StampInterface[] $stamps
+     *
+     * @return mixed
      */
     public function dispatch(object $command, array $stamps = [])
     {

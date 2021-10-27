@@ -8,8 +8,6 @@ class PhpRedisStorage implements StorageInterface
 {
     private const ONLY_ADD = 'NX';
 
-    private const ONLY_UPDATE = 'XX';
-
     private const DEFAULT_DATA_TTL = 60 * 60 * 24 * 30;
 
     private \Redis $client;
@@ -41,7 +39,7 @@ class PhpRedisStorage implements StorageInterface
     {
         $key = $this->getKey($namespace, $workflowId);
 
-        $this->client->zRemRangeByScore($key, (float) $position, (float) $position);
+        $this->client->zRemRangeByScore($key, $position, $position);
         $this->client->zAdd($key, [self::ONLY_ADD], $position, $this->buildValue($position, $status));
     }
 
@@ -49,17 +47,17 @@ class PhpRedisStorage implements StorageInterface
     {
         $result = $this->client->zRangeByScore(
             $this->getKey($namespace, $workflowId),
-            (float) $position,
-            (float) $position,
+            $position,
+            $position,
             []
         );
 
-        return isset($result[0]) ? $this->extraxtStatus($result[0]) : null;
+        return isset($result[0]) ? $this->extractStatus($result[0]) : null;
     }
 
     public function removeItem(string $namespace, string $workflowId, int $position): void
     {
-        $this->client->zRemRangeByScore($this->getKey($namespace, $workflowId), (float) $position, (float) $position);
+        $this->client->zRemRangeByScore($this->getKey($namespace, $workflowId), $position, $position);
     }
 
     private function getKey(string $namespace, string $workflowId): string
@@ -72,7 +70,7 @@ class PhpRedisStorage implements StorageInterface
         return $position . '_' . $status;
     }
 
-    private function extraxtStatus(string $value): string
+    private function extractStatus(string $value): string
     {
         return explode('_', $value)[1];
     }

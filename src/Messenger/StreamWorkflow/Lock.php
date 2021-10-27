@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace DevTools\Messenger\StreamWorkflow;
 
 use DevTools\Messenger\Exception\UnableToAcquireExclusivity;
-use Symfony\Component\Lock\Lock as SymfonyLock;
 use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\LockInterface;
 
 class Lock
 {
@@ -21,7 +21,7 @@ class Lock
     private LockFactory $lockFactory;
 
     /**
-     * @var SymfonyLock[]
+     * @var LockInterface[]
      */
     private array $locks = [];
 

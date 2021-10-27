@@ -24,7 +24,7 @@ class StreamWorkflowMiddleware implements MiddlewareInterface
     {
         /** @var null|StreamWorkflowStamp $workflowStamp */
         $workflowStamp = $envelope->last(StreamWorkflowStamp::class);
-        /** @var null|ReceivedStamp $workflowStamp */
+        /** @var null|ReceivedStamp $receivedStamp */
         $receivedStamp = $envelope->last(ReceivedStamp::class);
 
         if (null !== $workflowStamp) {

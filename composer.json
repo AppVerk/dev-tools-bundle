@@ -50,7 +50,7 @@
         "coduo/php-matcher": "^6.0",
         "hautelook/alice-bundle": "^2.9",
         "symfony/phpunit-bridge": "^4.4 || ^5.2",
-        "friendsofphp/php-cs-fixer": "^2.18",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "phpstan/phpstan-phpunit": "^0.12",
         "phpstan/phpstan-symfony": "^0.12",
         "myclabs/php-enum": "^1.8",
@@ -62,9 +62,9 @@
     },
     "scripts": {
         "analyse": [
-            "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots --dry-run",
+            "php-cs-fixer fix --diff --verbose --show-progress=dots --dry-run",
             "phpstan analyse src tests -l 7"
         ],
-        "cs-fix": "php-cs-fixer fix --diff --diff-format=udiff --verbose --show-progress=dots"
+        "cs-fix": "php-cs-fixer fix --diff --verbose --show-progress=dots"
     }
 }

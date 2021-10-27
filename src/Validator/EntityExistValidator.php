@@ -22,7 +22,7 @@ class EntityExistValidator extends AbstractEntityValidator
             throw new UnexpectedTypeException($constraint, EntityExist::class);
         }
 
-        /** @var class-string|null $entityClass */
+        /** @var null|class-string $entityClass */
         $entityClass = $constraint->entityClass;
 
         if (null === $entityClass) {
