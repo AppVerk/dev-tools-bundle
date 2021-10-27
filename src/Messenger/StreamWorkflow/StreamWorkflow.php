@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace DevTools\Messenger\StreamWorkflow;
 
-use DevTools\Messenger\Exception\RequiredPositionNotProcessedException;
+use DevTools\Messenger\Exception\UnprocessedPositionException;
 use DevTools\Messenger\Stamp\StreamWorkflowStamp;
 
 class StreamWorkflow
@@ -37,7 +37,7 @@ class StreamWorkflow
 
         if (null !== $streamPosition && $streamPosition >= $workflowStamp->getCurrentPosition()) {
             throw new \LogicException(sprintf(
-                'Stream has greater version then added item in workflow "%s", "%s"',
+                'Stream has greater or equal version to adding item in workflow "%s", "%s"',
                 $workflowStamp->getNamespace(),
                 $workflowStamp->getWorkflowId()
             ));
@@ -109,7 +109,7 @@ class StreamWorkflow
             return $result;
         }
 
-        throw new RequiredPositionNotProcessedException(sprintf(
+        throw new UnprocessedPositionException(sprintf(
             'Item on position "%d" not processed. Required by item "%d" of workflow "%s" in namespace "%s".',
             $requiredPosition,
             $workflowStamp->getCurrentPosition(),
