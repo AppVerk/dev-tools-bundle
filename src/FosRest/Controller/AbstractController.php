@@ -6,6 +6,7 @@ namespace DevTools\FosRest\Controller;
 
 use DevTools\Messenger\CommandBus;
 use DevTools\Messenger\QueryBus;
+use DevTools\Messenger\Stamp\DefaultTransportStamp;
 use DevTools\Repository\PaginatedResult;
 use DevTools\Response\Includes\MapInterface;
 use DevTools\Response\Includes\Resolver;
@@ -32,9 +33,12 @@ abstract class AbstractController extends AbstractFOSRestController
     /**
      * @return null|mixed
      */
-    protected function dispatchCommand(object $command, bool $forceSyncProcessing = false)
+    protected function dispatchCommand(object $command, bool $forceSyncProcessing = true)
     {
-        return $this->getCommandBus()->dispatch($command, $forceSyncProcessing);
+        return $this->getCommandBus()->dispatch(
+            $command,
+            $forceSyncProcessing ? [DefaultTransportStamp::sync()] : []
+        );
     }
 
     /**

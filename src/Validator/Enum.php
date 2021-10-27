@@ -16,12 +16,12 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 class Enum extends Choice
 {
     /**
-     * @var class-string|null
+     * @var null|class-string
      */
     public ?string $class = null;
 
     /**
-     * @param class-string|null $class
+     * @param null|class-string $class
      * @param null|mixed        $groups
      * @param null|mixed        $payload
      */

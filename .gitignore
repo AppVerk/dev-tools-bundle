@@ -10,3 +10,4 @@ composer.lock
 /vendor/
 ###< symfony/framework-bundle ###
 /.php_cs.cache
+/.php-cs-fixer.cache

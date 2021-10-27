@@ -4,31 +4,34 @@ declare(strict_types = 1);
 
 namespace DevTools\Messenger;
 
-use DevTools\Messenger\Stamp\ForcedSenderStamp;
+use DevTools\Messenger\Stamp\DefaultTransportStamp;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Messenger\Stamp\StampInterface;
 
 class CommandBus
 {
-    /**
-     * @var MessageBusInterface
-     */
-    private $messageBus;
+    private MessageBusInterface $messageBus;
 
-    public function __construct(MessageBusInterface $messageBus)
+    private ?string $defaultTransport;
+
+    public function __construct(MessageBusInterface $messageBus, string $defaultTransport)
     {
         $this->messageBus = $messageBus;
+        $this->defaultTransport = $defaultTransport;
     }
 
     /**
+     * @param StampInterface[] $stamps
+     *
      * @return mixed
      */
-    public function dispatch(object $command, bool $forceSyncProcessing = false)
+    public function dispatch(object $command, array $stamps = [])
     {
-        $stamps = [];
+        $senderStamps = array_filter($stamps, fn (StampInterface $stamp) => $stamp instanceof DefaultTransportStamp);
 
-        if ($forceSyncProcessing) {
-            $stamps[] = new ForcedSenderStamp('sync');
+        if (empty($senderStamps)) {
+            $stamps[] = new DefaultTransportStamp($this->defaultTransport);
         }
 
         $envelope = $this->messageBus->dispatch($command, $stamps);

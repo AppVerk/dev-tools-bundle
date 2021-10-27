@@ -6,7 +6,7 @@ namespace DevTools\Repository;
 
 class CursorResult extends AbstractPageResult
 {
-    private ?string $nextPageToken = null;
+    private ?string $nextPageToken;
 
     public function __construct(array $items, int $itemsPerPage, string $nextPageToken = null)
     {

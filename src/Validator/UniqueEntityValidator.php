@@ -34,7 +34,7 @@ class UniqueEntityValidator extends AbstractEntityValidator
             throw new UnexpectedTypeException($constraint, UniqueEntity::class);
         }
 
-        /** @var class-string|null $entityClass */
+        /** @var null|class-string $entityClass */
         $entityClass = $constraint->entityClass;
 
         if (null === $entityClass) {

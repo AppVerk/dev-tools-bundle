@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace DevTools\DependencyInjection\Compiler;
 
-use DevTools\Messenger\Envelope\ForcedSenderLocator;
+use DevTools\Messenger\Envelope\SenderLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -26,14 +26,14 @@ class ConfigureMessageBusesPass implements CompilerPassInterface
         if ($container->hasDefinition('messenger.senders_locator')) {
             $baseDefinition = $container->getDefinition('messenger.senders_locator');
 
-            $newDefinition = new Definition(ForcedSenderLocator::class, [
-                new Reference(ForcedSenderLocator::class . '.inner'),
+            $newDefinition = new Definition(SenderLocator::class, [
+                new Reference(SenderLocator::class . '.inner'),
                 $baseDefinition->getArgument(1),
             ]);
 
             $newDefinition->setDecoratedService('messenger.senders_locator');
 
-            $container->setDefinition(ForcedSenderLocator::class, $newDefinition);
+            $container->setDefinition(SenderLocator::class, $newDefinition);
         }
     }
 }
