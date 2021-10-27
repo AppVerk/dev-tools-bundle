@@ -47,6 +47,7 @@
     "require-dev": {
         "ext-redis": "*",
         "ext-amqp": "*",
+        "ext-json": "*",
         "coduo/php-matcher": "^6.0",
         "hautelook/alice-bundle": "^2.9",
         "symfony/phpunit-bridge": "^4.4 || ^5.2",

@@ -95,9 +95,9 @@ abstract class ApiTestCase extends WebTestCase
         self::$purgeWithTruncate = false;
 
         /** @var TestCaseFixturesLocator $fixtureLocator */
-        $fixtureLocator = static::$container->get(TestCaseFixturesLocator::class);
+        $fixtureLocator = static::getContainer()->get(TestCaseFixturesLocator::class);
         /** @var TestCommandBus $commandBus */
-        $commandBus = static::$container->get(CommandBus::class);
+        $commandBus = static::getContainer()->get(CommandBus::class);
 
         $fixtureLocator->setFixturesDirectories(static::getFixturesDirectories());
         $commandBus->disable();
