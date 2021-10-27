@@ -12,7 +12,7 @@ class Lock
 {
     private const LOCK_PREFIX = 'stream_workflow';
 
-    private const DEFAULT_TTL = 3600;
+    private const DEFAULT_TTL = 60;
 
     private const CACHED_ITEMS_COUNT = 50;
 
@@ -42,7 +42,7 @@ class Lock
 
         $lock = $this->lockFactory->createLock($lockKey, $this->ttl);
 
-        if ($lock->acquire(true)) {
+        if ($lock->acquire()) {
             $this->locks[$lockKey] = $lock;
 
             if (count($this->locks) > self::CACHED_ITEMS_COUNT) {
