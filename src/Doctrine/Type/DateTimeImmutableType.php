@@ -22,7 +22,7 @@ class DateTimeImmutableType extends Base
         }
 
         if ($value instanceof DateTimeInterface) {
-            $value = TimeZoneConvertor::convertToDb($value);
+            $value = TimeZoneConverter::convertToDb($value);
 
             return $value->format($platform->getDateTimeFormatString());
         }
@@ -43,7 +43,7 @@ class DateTimeImmutableType extends Base
             return $value;
         }
 
-        $dateTime = DateTimeImmutable::createFromFormat($platform->getDateTimeFormatString(), $value, TimeZoneConvertor::dbTimeZone());
+        $dateTime = DateTimeImmutable::createFromFormat($platform->getDateTimeFormatString(), $value, TimeZoneConverter::dbTimeZone());
 
         if (!$dateTime) {
             throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateTimeFormatString());

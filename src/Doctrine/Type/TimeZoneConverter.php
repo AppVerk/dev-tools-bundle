@@ -10,7 +10,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use LogicException;
 
-class TimeZoneConvertor
+class TimeZoneConverter
 {
     private static ?\DateTimeZone $dbTimeZone = null;
 
