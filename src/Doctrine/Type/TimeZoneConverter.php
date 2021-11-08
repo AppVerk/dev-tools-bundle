@@ -21,14 +21,7 @@ class TimeZoneConverter
         if (null === static::$dbTimeZone) {
             $name = defined('DATABASE_TIMEZONE') ? DATABASE_TIMEZONE : getenv('DATABASE_TIMEZONE');
 
-            if (!is_string($name)) {
-                throw new LogicException(sprintf(
-                    'Environment variable "DATABASE_TIMEZONE" was expected to contain a string, got "%s".',
-                    gettype($name)
-                ));
-            }
-
-            static::$dbTimeZone = $name ? static::phpTimeZone() : new DateTimeZone($name);
+            static::$dbTimeZone = is_string($name) ? new DateTimeZone($name) : static::phpTimeZone();
         }
 
         return static::$dbTimeZone;
