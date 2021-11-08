@@ -124,7 +124,7 @@ class Paginator
         $items = [];
 
         if ($queryBuilder instanceof DBALQueryBuilder) {
-            $items = $queryBuilder->execute()->fetchAllAssociative();
+            $items = $queryBuilder->executeQuery()->fetchAllAssociative();
         } elseif ($queryBuilder instanceof QueryBuilder) {
             $items = $queryBuilder->getQuery()->getResult();
         }
