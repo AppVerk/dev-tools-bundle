@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace DevTools\Doctrine\Mapping\Type;
+namespace DevTools\Doctrine\Type;
 
 use DateTimeImmutable;
 use DateTimeInterface;
