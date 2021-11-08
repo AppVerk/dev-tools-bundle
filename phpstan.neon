@@ -14,9 +14,9 @@ parameters:
 #        container_xml_path: var/cache/test/srcApp_KernelTestDebugContainer.xml
 
     ignoreErrors:
-        - '#Cannot call method fetchAllAssociative\(\) on Doctrine\\DBAL\\ForwardCompatibility\\DriverStatement\|int#'
         - '#Call to an undefined method ReflectionType::getName\(\)#'
         - '#Cannot call method getId\(\) on class-string\|Stringable\|.*UserInterface#'
         - '#Call to an undefined method object::getProjectDir\(\)#'
         - '#Binary operation "\+" between array<class-string, class-string>\&nonEmpty and array<string, class-string>\|false results in an error#'
         - '#Parameter \#2 \$options of method Redis::zAdd\(\) expects float\|string, array<int, string> given#'
+        - '#Unreachable statement - code above always terminates#'
