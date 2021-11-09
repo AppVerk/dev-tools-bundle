@@ -22,7 +22,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
     public function save(object ...$entities): void
     {
-        $this->_em->transactional(function () use ($entities): void {
+        $this->_em->wrapInTransaction(function () use ($entities): void {
             foreach ($entities as $entity) {
                 $this->_em->persist($entity);
             }
@@ -31,6 +31,12 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
             $this->publishEvents($entities);
         });
+    }
+
+    public function saveAndClear(object ...$entities): void
+    {
+        $this->save(...$entities);
+        $this->_em->clear();
     }
 
     public function remove(object ...$entities): void
