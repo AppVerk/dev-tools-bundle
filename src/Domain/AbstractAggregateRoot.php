@@ -50,9 +50,7 @@ abstract class AbstractAggregateRoot
 
     public function attachEvent(AbstractAggregateRootEvent $event): void
     {
-        ++$this->version;
-
-        $this->recordedEvents[] = $event->withVersion($this->version);
+        $this->recordEvent($event);
     }
 
     public function getVersion(): int
@@ -62,7 +60,14 @@ abstract class AbstractAggregateRoot
 
     protected function recordThat(AbstractAggregateRootEvent $event): void
     {
-        $this->attachEvent($event);
+        $this->recordEvent($event);
         $this->apply($event);
+    }
+
+    private function recordEvent(AbstractAggregateRootEvent $event): void
+    {
+        ++$this->version;
+
+        $this->recordedEvents[] = $event->withVersion($this->version);
     }
 }
