@@ -16,6 +16,9 @@ class EntityExist extends Constraint
 
     public string $message = 'Related entity not found.';
 
+    /**
+     * @var null|class-string
+     */
     public ?string $entityClass = null;
 
     public string $repositoryMethod = 'exists';
@@ -28,7 +31,10 @@ class EntityExist extends Constraint
     ];
 
     /**
-     * {@inheritdoc}
+     * @param mixed[]           $options
+     * @param null|class-string $entityClass
+     * @param null|string[]     $groups
+     * @param mixed             $payload
      */
     public function __construct(
         array $options = [],

@@ -16,11 +16,16 @@ class UniqueEntity extends Constraint
 
     public string $message = 'This value is already used.';
 
+    /**
+     * @var null|class-string
+     */
     public ?string $entityClass = null;
 
     public string $repositoryMethod = 'exists';
 
     public ?string $excludeField = null;
+
+    public ?string $inCollection = null;
 
     /**
      * @var string[]
@@ -30,7 +35,10 @@ class UniqueEntity extends Constraint
     ];
 
     /**
-     * {@inheritdoc}
+     * @param mixed[]           $options
+     * @param null|class-string $entityClass
+     * @param null|string[]     $groups
+     * @param mixed             $payload
      */
     public function __construct(
         array $options = [],
@@ -38,6 +46,7 @@ class UniqueEntity extends Constraint
         string $message = null,
         string $repositoryMethod = null,
         string $excludeField = null,
+        string $inCollection = null,
         array $groups = null,
         $payload = null
     ) {
@@ -47,5 +56,6 @@ class UniqueEntity extends Constraint
         $this->message = $message ?? $this->message;
         $this->repositoryMethod = $repositoryMethod ?? $this->repositoryMethod;
         $this->excludeField = $excludeField ?? $this->excludeField;
+        $this->inCollection = $inCollection ?? $this->inCollection;
     }
 }

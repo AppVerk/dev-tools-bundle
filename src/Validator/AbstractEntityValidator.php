@@ -23,9 +23,9 @@ abstract class AbstractEntityValidator extends ConstraintValidator
     /**
      * @param class-string $entityClass
      * @param mixed        $value
-     * @param null|mixed   $excludeValue
+     * @param mixed        $excludeValue
      */
-    protected function assertEntityExists(
+    protected function assertItemExists(
         ObjectManager $em,
         string $entityClass,
         string $repositoryMethod,
@@ -34,11 +34,40 @@ abstract class AbstractEntityValidator extends ConstraintValidator
     ): bool {
         $repository = $em->getRepository($entityClass);
 
-        $arguments = $this->normalizeMethodArguments($repository, $repositoryMethod, $value, $excludeValue);
+        $arguments = $this->normalizeItemMethodArguments($repository, $repositoryMethod, $value, $excludeValue);
 
         $result = $repository->{$repositoryMethod}(...$arguments);
 
         return (bool) $result;
+    }
+
+    /**
+     * @param class-string $entityClass
+     * @param mixed[]      $values
+     *
+     * @return bool[]
+     */
+    protected function assertCollectionExist(
+        ObjectManager $em,
+        string $entityClass,
+        string $repositoryMethod,
+        array $values
+    ): array {
+        $repository = $em->getRepository($entityClass);
+
+        $arguments = $this->normalizeCollectionMethodArguments($repository, $repositoryMethod, $values);
+
+        $result = $repository->{$repositoryMethod}(...$arguments);
+
+        if (!is_array($result)) {
+            throw new \LogicException(sprintf(
+                'Repository method %s::%s should return collection of bool values.',
+                get_class($repository),
+                $repositoryMethod
+            ));
+        }
+
+        return $result;
     }
 
     /**
@@ -87,8 +116,10 @@ abstract class AbstractEntityValidator extends ConstraintValidator
     /**
      * @param mixed $value
      * @param mixed $excludeValue
+     *
+     * @return mixed[]
      */
-    protected function normalizeMethodArguments(
+    protected function normalizeItemMethodArguments(
         ObjectRepository $repository,
         string $repositoryMethod,
         $value,
@@ -112,5 +143,27 @@ abstract class AbstractEntityValidator extends ConstraintValidator
         }
 
         return $arguments;
+    }
+
+    /**
+     * @param mixed[] $values
+     *
+     * @return mixed[]
+     */
+    protected function normalizeCollectionMethodArguments(
+        ObjectRepository $repository,
+        string $repositoryMethod,
+        array $values
+    ): array {
+        $params = (new \ReflectionMethod($repository, $repositoryMethod))->getParameters();
+        $param = $params[0] ?? null;
+
+        if (null === $param || Uuid::class !== $param->getType()->getName()) {
+            return [$values];
+        }
+
+        $arguments = array_map(fn (string $value) => Uuid::fromString($value), array_filter($values, 'is_string'));
+
+        return $param->isVariadic() ? [...$arguments] : [$arguments];
     }
 }
