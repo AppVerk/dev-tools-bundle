@@ -6,7 +6,7 @@ namespace DevTools\Domain;
 
 trait EventObserverTrait
 {
-    protected function observe(AbstractAggregateRootEvent $event): void
+    protected function observeEvent(AbstractAggregateRootEvent $event): void
     {
         $handler = $this->determineEventHandlerMethodFor($event);
 
