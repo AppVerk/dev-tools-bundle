@@ -166,4 +166,11 @@ abstract class AbstractEntityValidator extends ConstraintValidator
 
         return $param->isVariadic() ? [...$arguments] : [$arguments];
     }
+
+    protected function determineCollectionPath(): ?string
+    {
+        $position = mb_strrpos($this->context->getPropertyPath(), '[');
+
+        return false === $position ? null : mb_substr($this->context->getPropertyPath(), 0, $position);
+    }
 }

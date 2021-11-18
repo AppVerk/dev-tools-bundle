@@ -45,11 +45,11 @@ class UniqueEntityValidator extends AbstractEntityValidator
             throw new ConstraintDefinitionException('Entity class should be fined.');
         }
 
-        $collectionPath = $constraint->inCollection;
-
         if (!is_scalar($value)) {
             return;
         }
+
+        $collectionPath = $this->determineCollectionPath();
 
         if (null === $collectionPath) {
             $em = $this->registry->getManagerForClass($entityClass);
@@ -136,7 +136,7 @@ class UniqueEntityValidator extends AbstractEntityValidator
         $result = $this->assertCollectionExist(
             $em,
             $class->getName(),
-            $constraint->repositoryMethod,
+            $constraint->batchRepositoryMethod,
             array_column($items, 'value')
         );
 

@@ -23,9 +23,9 @@ class UniqueEntity extends Constraint
 
     public string $repositoryMethod = 'exists';
 
-    public ?string $excludeField = null;
+    public string $batchRepositoryMethod = 'exist';
 
-    public ?string $inCollection = null;
+    public ?string $excludeField = null;
 
     /**
      * @var string[]
@@ -45,8 +45,8 @@ class UniqueEntity extends Constraint
         string $entityClass = null,
         string $message = null,
         string $repositoryMethod = null,
+        string $batchRepositoryMethod = null,
         string $excludeField = null,
-        string $inCollection = null,
         array $groups = null,
         $payload = null
     ) {
@@ -55,7 +55,7 @@ class UniqueEntity extends Constraint
         $this->entityClass = $entityClass ?? $this->entityClass;
         $this->message = $message ?? $this->message;
         $this->repositoryMethod = $repositoryMethod ?? $this->repositoryMethod;
+        $this->batchRepositoryMethod = $batchRepositoryMethod ?? $this->batchRepositoryMethod;
         $this->excludeField = $excludeField ?? $this->excludeField;
-        $this->inCollection = $inCollection ?? $this->inCollection;
     }
 }
