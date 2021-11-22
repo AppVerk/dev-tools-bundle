@@ -125,8 +125,8 @@ class DataNormalizer
     private function determineTypeByConstraint(Constraint $constraint): ?string
     {
         if ($constraint instanceof Composite) {
-            foreach ($constraint->getNestedContraints() as $nestedContraint) {
-                $result = $this->determineTypeByConstraint($nestedContraint);
+            foreach ($constraint->getNestedConstraints() as $nestedConstraint) {
+                $result = $this->determineTypeByConstraint($nestedConstraint);
 
                 if (null !== $result) {
                     return $result;
