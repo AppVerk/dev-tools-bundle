@@ -14,6 +14,7 @@ abstract class ApiTestCase extends WebTestCase
 {
     use PHPMatcherAssertions;
     use ReloadDatabaseTrait;
+    use ServiceAccessTrait;
 
     protected KernelBrowser $client;
 
@@ -22,11 +23,6 @@ abstract class ApiTestCase extends WebTestCase
     protected function setUp(): void
     {
         $this->client = self::createClient();
-    }
-
-    protected function getService(string $id): ?object
-    {
-        return self::$kernel->getContainer()->get($id);
     }
 
     protected function buildQuery(string $url, array $parameters): string
