@@ -42,7 +42,7 @@ class Resolver
             $data = [$data];
         }
 
-        $rawIncludes = (array) $this->requestStack->getMasterRequest()->get(self::REQUEST_PARAMETER, []);
+        $rawIncludes = (array) $this->requestStack->getMainRequest()->get(self::REQUEST_PARAMETER, []);
         $includes = $this->parser->parse($this->normalizeIncludes($rawIncludes), self::MAX_LEVEL);
 
         $map->init($includes);
@@ -57,15 +57,16 @@ class Resolver
         $result = [];
 
         foreach ($map->getChildren() as $relation => $child) {
+            $resultKey = $this->nameConverter->normalize($relation);
             $retriever = $this->getDataRetriever($child);
             $ids = $relationsIds[$relation];
 
-            $result[$relation] = 0 === count($ids) ? [] : $retriever->retrieve($ids, $map->getContext());
-            $childResults = $this->resolveMap($child, $result[$relation]);
+            $result[$resultKey] = 0 === count($ids) ? [] : $retriever->retrieve($ids, $map->getContext());
+            $childResults = $this->resolveMap($child, $result[$resultKey]);
 
             foreach ($childResults as $childRelation => $childResult) {
-                $relation = $this->nameConverter->normalize($relation . '.' . $childRelation);
-                $result[$relation] = $childResult;
+                $resultKey = $this->nameConverter->normalize($relation . '.' . $childRelation);
+                $result[$resultKey] = $childResult;
             }
         }
 
