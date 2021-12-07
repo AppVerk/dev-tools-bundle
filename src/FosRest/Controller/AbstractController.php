@@ -58,6 +58,10 @@ abstract class AbstractController extends AbstractFOSRestController
 
         if (null !== $includesMap) {
             $result['included'] = $this->getIncludesResolver()->resolve($data instanceof PaginatedResult ? $data->getItems() : $data, $includesMap);
+
+            if (empty($result['included'])) {
+                unset($result['included']);
+            }
         }
 
         $view = $this->view($result, Response::HTTP_OK);

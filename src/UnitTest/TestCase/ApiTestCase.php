@@ -42,11 +42,9 @@ abstract class ApiTestCase extends WebTestCase
 
     protected function assertResponseContent(string $actualResponse, ?string $expectedContentFile): void
     {
-        $expectedContentFilePath = null === $expectedContentFile
-            ? null
-            : $this->getRootDir() . $this->responsesPath . '/' . $expectedContentFile;
-
-        $expectedResponse = null === $expectedContentFilePath ? '' : file_get_contents($expectedContentFilePath);
+        $expectedResponse = null === $expectedContentFile
+            ? ''
+            : $this->loadResponseFileContent($expectedContentFile);
 
         $this->assertMatchesPattern($expectedResponse, $actualResponse);
     }
@@ -68,6 +66,13 @@ abstract class ApiTestCase extends WebTestCase
     protected function prettifyJson(string $content): string
     {
         return (string) \json_encode(json_decode($content), \JSON_PRETTY_PRINT);
+    }
+
+    protected function loadResponseFileContent(string $fileName): string
+    {
+        $filePath = $this->getRootDir() . $this->responsesPath . '/' . $fileName;
+
+        return (string) file_get_contents($filePath);
     }
 
     protected function loadJsonData(string $file): array
