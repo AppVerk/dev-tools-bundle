@@ -87,7 +87,11 @@ class Resolver
                 continue;
             }
 
-            $result[] = $this->nameConverter->denormalize($include);
+            $parts = array_map(function (string $part) {
+                return $this->nameConverter->denormalize($part);
+            }, (array) explode('.', $include));
+
+            $result[] = implode('.', $parts);
         }
 
         return $result;
