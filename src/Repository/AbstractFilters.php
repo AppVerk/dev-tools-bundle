@@ -4,14 +4,14 @@ declare(strict_types = 1);
 
 namespace DevTools\Repository;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
 abstract class AbstractFilters
 {
-    protected EntityManager $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
