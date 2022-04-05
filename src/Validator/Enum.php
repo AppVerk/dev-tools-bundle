@@ -55,6 +55,7 @@ class Enum extends Choice
         };
 
         parent::__construct(
+            $options,
             null,
             $callback,
             $multiple,
@@ -67,7 +68,6 @@ class Enum extends Choice
             $maxMessage,
             $groups,
             $payload,
-            $options
         );
     }
 
