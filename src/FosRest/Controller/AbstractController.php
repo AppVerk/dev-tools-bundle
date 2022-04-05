@@ -19,7 +19,7 @@ abstract class AbstractController extends AbstractFOSRestController
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         $subscribedServices = parent::getSubscribedServices();
 
@@ -33,7 +33,7 @@ abstract class AbstractController extends AbstractFOSRestController
     /**
      * @return null|mixed
      */
-    protected function dispatchCommand(object $command, bool $forceSyncProcessing = true)
+    protected function dispatchCommand(object $command, bool $forceSyncProcessing = true): mixed
     {
         return $this->getCommandBus()->dispatch(
             $command,
@@ -44,7 +44,7 @@ abstract class AbstractController extends AbstractFOSRestController
     /**
      * @return mixed
      */
-    protected function dispatchQuery(object $query)
+    protected function dispatchQuery(object $query): mixed
     {
         return $this->getQueryBus()->dispatch($query);
     }
