@@ -15,7 +15,7 @@ class EnumNormalizer implements CacheableSupportsMethodInterface, DenormalizerIn
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         return (string) $object;
     }
@@ -23,7 +23,7 @@ class EnumNormalizer implements CacheableSupportsMethodInterface, DenormalizerIn
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof Enum;
     }
@@ -31,7 +31,7 @@ class EnumNormalizer implements CacheableSupportsMethodInterface, DenormalizerIn
     /**
      * {@inheritdoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = []): mixed
     {
         try {
             $object = new $class($data);
@@ -45,7 +45,7 @@ class EnumNormalizer implements CacheableSupportsMethodInterface, DenormalizerIn
     /**
      * {@inheritdoc}
      */
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization($data, $type, $format = null): bool
     {
         return is_subclass_of($type, Enum::class);
     }

@@ -37,7 +37,7 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
      *
      * @return array
      */
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = []): array
     {
         $exception = $context['exception'] ?? null;
 
@@ -73,7 +73,7 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, string $format = null, array $context = [])
+    public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         $parentResult = $this->decoratedNormalizer instanceof ContextAwareNormalizerInterface
             ? $this->decoratedNormalizer->supportsNormalization($data, $format, $context)

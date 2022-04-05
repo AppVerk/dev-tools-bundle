@@ -19,7 +19,7 @@ class ResponseStatusCodeListener implements EventSubscriberInterface
         $this->decoratedListener = $decoratedListener;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return DecoratedListener::getSubscribedEvents();
     }

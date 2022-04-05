@@ -12,7 +12,7 @@ class ArrayObjectDenormalizer implements CacheableSupportsMethodInterface, Denor
     /**
      * {@inheritDoc}
      */
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = []): \ArrayObject
     {
         return new \ArrayObject((array) $data);
     }
@@ -20,7 +20,7 @@ class ArrayObjectDenormalizer implements CacheableSupportsMethodInterface, Denor
     /**
      * {@inheritDoc}
      */
-    public function supportsDenormalization($data, string $type, string $format = null)
+    public function supportsDenormalization($data, string $type, string $format = null): bool
     {
         return \ArrayObject::class === $type;
     }

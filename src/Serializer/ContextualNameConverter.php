@@ -21,7 +21,7 @@ class ContextualNameConverter implements AdvancedNameConverterInterface
     /**
      * {@inheritDoc}
      */
-    public function normalize(string $propertyName, string $class = null, string $format = null, array $context = [])
+    public function normalize(string $propertyName, string $class = null, string $format = null, array $context = []): string
     {
         if (isset($context[self::DISABLE_CONVERSION_TAG])) {
             return $propertyName;
@@ -37,7 +37,7 @@ class ContextualNameConverter implements AdvancedNameConverterInterface
     /**
      * {@inheritDoc}
      */
-    public function denormalize(string $propertyName, string $class = null, string $format = null, array $context = [])
+    public function denormalize(string $propertyName, string $class = null, string $format = null, array $context = []): string
     {
         if (isset($context[self::DISABLE_CONVERSION_TAG])) {
             return $propertyName;
