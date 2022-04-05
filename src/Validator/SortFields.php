@@ -52,7 +52,7 @@ class SortFields extends Composite
     /**
      * {@inheritdoc}
      */
-    public function getRequiredOptions()
+    public function getRequiredOptions(): array
     {
         return ['fields'];
     }
@@ -60,7 +60,7 @@ class SortFields extends Composite
     /**
      * {@inheritdoc}
      */
-    protected function getCompositeOption()
+    protected function getCompositeOption(): string
     {
         return 'fields';
     }
